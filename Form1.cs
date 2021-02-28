@@ -45,7 +45,7 @@ namespace PSIP_Udvardi_csh
             PacketDevice loopback1 = allDevices[0];
 
             using (PacketCommunicator communicator =
-                loopback1.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1000))
+                loopback1.Open(1000, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1000))
             {
                 Console.WriteLine("Listen on " + loopback1.Description);
                 communicator.ReceivePackets(0, PacketHandler);
