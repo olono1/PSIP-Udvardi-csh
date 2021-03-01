@@ -13,40 +13,70 @@ using System.Threading;
 
 namespace PSIP_Udvardi_csh
 {
+
     public partial class Form1 : Form
     {
-        
+        //IDEA:: Create a class that will carry the statistics details accross the threads
         public Form1()
         {
-
             InitializeComponent();
             
         }
+
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+            IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
+            PacketDevice loopback1 = allDevices[0];
+            PacketDevice loopback2 = allDevices[5];
+            Thread trdLoop1_snd = new Thread(() => this.ThreadTask(loopback1)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+            trdLoop1_snd.IsBackground = true;
+            trdLoop1_snd.Start();
+            Thread trdLoop1_recv = new Thread(() => this.ThreadTask(loopback1));
+            trdLoop1_recv.IsBackground = true;
+            trdLoop1_recv.Start();
+            Thread trdLoop2_snd = new Thread(() => this.ThreadTask(loopback2));
+            trdLoop2_snd.IsBackground = true;
+            trdLoop2_snd.Start();
+            Thread trdLoop2_recv = new Thread(() => this.ThreadTask(loopback2));
+            trdLoop2_recv.IsBackground = true;
+            trdLoop2_recv.Start();
+        }
+
         private Thread trd;
         public delegate void UpdateLabelUi();
+
+        public void start_sniffing(PacketDevice interfLoopback)
+        {
+            using (PacketCommunicator communicator =
+                    interfLoopback.Open(1000, 
+                    PacketDeviceOpenAttributes.NoCaptureLocal | 
+                    PacketDeviceOpenAttributes.Promiscuous, 1000))
+            {
+                Console.WriteLine("Listen on " + interfLoopback.Description);
+                communicator.ReceivePackets(0, PacketHandler);
+            }
+        }
+
+
+
 
         public void UiUpdateLabel()
         {
             this.progressBar1.Value = 5;
         }
-        private void ThreadTask()
+        private void ThreadTask(PacketDevice deviceInterfaceLoopBck)
         {
-            while (true)
-            {
+            
 
-                this.progressBar1.Invoke(new MethodInvoker(delegate { this.progressBar1.Value = newval; }));
+                //this.progressBar1.Invoke(new MethodInvoker(delegate { this.progressBar1.Value = newval; }));
                
-            }
+            
 
         }
 
+        
        
-        private void Form1_Load_1(object sender, EventArgs e)
-        {
-            Thread trd = new Thread(new ThreadStart(this.ThreadTask));
-            trd.IsBackground = true;
-            trd.Start();
-        }
+
 
 
         private void btnClickThis_Click(object sender, EventArgs e)
