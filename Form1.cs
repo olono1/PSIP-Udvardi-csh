@@ -27,53 +27,53 @@ namespace PSIP_Udvardi_csh
         private void Form1_Load_1(object sender, EventArgs e)
         {
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
-            PacketDevice loopback1 = allDevices[0];
-            PacketDevice loopback2 = allDevices[4];
-            Console.WriteLine("Int1: " + loopback1.Description);
-            Console.WriteLine("Int2: " + loopback2.Description);
-            //Thread trdLoop1_snd = new Thread(() => this.ThreadTask(loopback1)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-           // trdLoop1_snd.IsBackground = true;
-           // trdLoop1_snd.Start();
-            Thread trdLoop1_recv = new Thread(() => this.start_sniffing(loopback2,loopback1));
+            PacketDevice loopback1_recv = allDevices[0]; //allDevices[0] = GNSloopback
+            PacketDevice loopback2_recv = allDevices[4]; //allDevices[4] = GNSloopback2
+
+            PacketDevice loopback1_send = allDevices[0]; //allDevices[0] = GNSloopback
+            PacketDevice loopback2_send = allDevices[4]; //allDevices[4] = GNSloopback2
+
+
+            Console.WriteLine("Int1: " + loopback1_recv.Description);
+            Console.WriteLine("Int2: " + loopback2_recv.Description);
+;
+
+            Thread trdLoop1_recv = new Thread(() => this.start_sniffing_lpbck1(loopback2_send,loopback1_recv));//equal> new Thread(delegate() { this.start_sniffing_lpbck1(loopback2, loopback1); });
             trdLoop1_recv.IsBackground = true;
             trdLoop1_recv.Start();
-            //Thread trdLoop2_snd = new Thread(() => this.ThreadTask(loopback2));
-            //trdLoop2_snd.IsBackground = true;
-            //trdLoop2_snd.Start();
-            //Thread trdLoop2_recv = new Thread(() => this.start_sniffing(loopback1, loopback2));
-            //trdLoop2_recv.IsBackground = true;
-           // trdLoop2_recv.Start();
+            Thread trdLoop2_recv = new Thread(() => this.start_sniffing_lpbck2(loopback1_send, loopback2_recv));
+            trdLoop2_recv.IsBackground = true;
+            trdLoop2_recv.Start();
         }
 
-        private Thread trd;
+      
         public delegate void UpdateLabelUi();
 
-        public void start_sniffing(PacketDevice sendingInterface, PacketDevice recvInterface)
+        public void start_sniffing_lpbck1(PacketDevice sendingInterface, PacketDevice recvInterface)
         {
-            using (PacketCommunicator communicator =
+            using (PacketCommunicator communicator_L1_r =
                     recvInterface.Open(1000, 
-                    PacketDeviceOpenAttributes.NoCaptureLocal | 
-                    PacketDeviceOpenAttributes.Promiscuous, 1000))
+                    PacketDeviceOpenAttributes.NoCaptureLocal, 100))
             {
-                Console.WriteLine("Listen on " + recvInterface.Description);
+                Console.WriteLine("Listen on " + recvInterface.Description + "name: " + recvInterface.Name);
+                
                 Packet packet;
                 do
-                {
-
-                    
-                    PacketCommunicatorReceiveResult result = communicator.ReceivePacket(out packet);
+                {                    
+                    PacketCommunicatorReceiveResult result = communicator_L1_r.ReceivePacket(out packet);
                     switch (result)
                     {
                         case PacketCommunicatorReceiveResult.Timeout:
                             // Timeout elapsed
                             continue;
                         case PacketCommunicatorReceiveResult.Ok:
-                            Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" +
+                            Packet forSending = packet;
+                            Console.WriteLine(recvInterface.Name + " length:" +
                                               packet.Length + "Eth:" + packet.Ethernet);
                             //Make stats with a dictionary.IDictionary<string, int> dict = new Dictionary<string, int>();
-                            Thread trdLoop1_snd = new Thread(() => this.send_packet(sendingInterface, packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-                            trdLoop1_snd.IsBackground = true;
-                            trdLoop1_snd.Start();
+                           // Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck1(sendingInterface, forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+                           // trdLoop1_snd.IsBackground = true;
+                           // trdLoop1_snd.Start();
                             break;
                         default:
                             throw new InvalidOperationException("The result " + result + " shoudl never be reached here");
@@ -84,20 +84,66 @@ namespace PSIP_Udvardi_csh
                 
             }
         }
-        private int send_packet(PacketDevice sendingInterface, Packet toSend)
+
+        public void start_sniffing_lpbck2(PacketDevice sendingInterface, PacketDevice recvInterface)
         {
-            using (PacketCommunicator communicator =
-                   sendingInterface.Open(1000,
-                   PacketDeviceOpenAttributes.NoCaptureLocal |
-                   PacketDeviceOpenAttributes.Promiscuous, 1000))
+            using (PacketCommunicator communicator_L2_r =
+                recvInterface.Open(1000,
+                PacketDeviceOpenAttributes.NoCaptureLocal, 100))
             {
-                communicator.SendPacket(toSend);
-                Console.WriteLine("Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
+                Console.WriteLine("Listen on " + recvInterface.Description + "name: " + recvInterface.Name);
+                //Second port Interface
+
+                Packet packet;
+                do
+                {
+                    PacketCommunicatorReceiveResult result = communicator_L2_r.ReceivePacket(out packet);
+                    switch (result)
+                    {
+                        case PacketCommunicatorReceiveResult.Timeout:
+                            // Timeout elapsed
+                            continue;
+                        case PacketCommunicatorReceiveResult.Ok:
+                            Packet forSending = packet;
+                            Console.WriteLine(recvInterface.Name + " length:" +
+                                              packet.Length + "Eth:" + packet.Ethernet);
+                            //Make stats with a dictionary.IDictionary<string, int> dict = new Dictionary<string, int>();
+                            //Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck2(sendingInterface, forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+                            //trdLoop1_snd.IsBackground = true;
+                            //trdLoop1_snd.Start();
+                            break;
+                        default:
+                            throw new InvalidOperationException("The result " + result + " shoudl never be reached here");
+                    }
+                } while (true);
             }
-            
-
-
+        }
+        private int send_packet_lpbck1(PacketDevice sendingInterface, Packet toSend)
+        {
+            using (PacketCommunicator communicator_L1_s =
+                   sendingInterface.Open(1000,
+                   PacketDeviceOpenAttributes.NoCaptureLocal, 1))
+            {
+                
+                communicator_L1_s.SendPacket(toSend);
+                Console.WriteLine(sendingInterface.Name +" Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
+                
+            }
                 return 0;
+        }
+
+        private int send_packet_lpbck2(PacketDevice sendingInterface, Packet toSend)
+        {
+            using (PacketCommunicator communicator_L2_s =
+                   sendingInterface.Open(1000,
+                   PacketDeviceOpenAttributes.NoCaptureLocal, 1))
+            {
+
+                communicator_L2_s.SendPacket(toSend);
+                Console.WriteLine(sendingInterface.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
+
+            }
+            return 0;
         }
 
 
