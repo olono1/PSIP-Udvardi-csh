@@ -49,7 +49,7 @@ namespace PSIP_Udvardi_csh
             // lblHelloWorld
             // 
             this.lblHelloWorld.AutoSize = true;
-            this.lblHelloWorld.Location = new System.Drawing.Point(207, 261);
+            this.lblHelloWorld.Location = new System.Drawing.Point(463, 147);
             this.lblHelloWorld.Name = "lblHelloWorld";
             this.lblHelloWorld.Size = new System.Drawing.Size(35, 13);
             this.lblHelloWorld.TabIndex = 1;
@@ -85,7 +85,7 @@ namespace PSIP_Udvardi_csh
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(522, 450);
+            this.ClientSize = new System.Drawing.Size(747, 450);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.descLbl);

@@ -59,6 +59,8 @@ namespace PSIP_Udvardi_csh
                 Packet packet;
                 do
                 {
+
+                    
                     PacketCommunicatorReceiveResult result = communicator.ReceivePacket(out packet);
                     switch (result)
                     {
@@ -68,7 +70,7 @@ namespace PSIP_Udvardi_csh
                         case PacketCommunicatorReceiveResult.Ok:
                             Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" +
                                               packet.Length + "Eth:" + packet.Ethernet);
-
+                            //Make stats with a dictionary.IDictionary<string, int> dict = new Dictionary<string, int>();
                             Thread trdLoop1_snd = new Thread(() => this.send_packet(sendingInterface, packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
                             trdLoop1_snd.IsBackground = true;
                             trdLoop1_snd.Start();
@@ -90,7 +92,7 @@ namespace PSIP_Udvardi_csh
                    PacketDeviceOpenAttributes.Promiscuous, 1000))
             {
                 communicator.SendPacket(toSend);
-                Console.WriteLine("Packet with IP: " + toSend.IpV4 + "and Timestmp: " + toSend.Timestamp + " SENT!");
+                Console.WriteLine("Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
                 Console.WriteLine("Sending garbage Ethernet");
                 communicator.SendPacket(BuildEthernetPacket());
             }
