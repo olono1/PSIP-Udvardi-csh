@@ -32,7 +32,6 @@ namespace PSIP_Udvardi_csh
             this.btnClickThis = new System.Windows.Forms.Button();
             this.lblHelloWorld = new System.Windows.Forms.Label();
             this.descLbl = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
@@ -59,19 +58,11 @@ namespace PSIP_Udvardi_csh
             // descLbl
             // 
             this.descLbl.AutoSize = true;
-            this.descLbl.Location = new System.Drawing.Point(298, 261);
+            this.descLbl.Location = new System.Drawing.Point(463, 174);
             this.descLbl.Name = "descLbl";
             this.descLbl.Size = new System.Drawing.Size(35, 13);
             this.descLbl.TabIndex = 2;
             this.descLbl.Text = "label1";
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(207, 12);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBar1.TabIndex = 3;
             // 
             // listBox1
             // 
@@ -87,7 +78,6 @@ namespace PSIP_Udvardi_csh
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(747, 450);
             this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.descLbl);
             this.Controls.Add(this.lblHelloWorld);
             this.Controls.Add(this.btnClickThis);
@@ -104,7 +94,6 @@ namespace PSIP_Udvardi_csh
         private System.Windows.Forms.Button btnClickThis;
         private System.Windows.Forms.Label lblHelloWorld;
         private System.Windows.Forms.Label descLbl;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ListBox listBox1;
     }
 }

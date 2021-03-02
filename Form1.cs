@@ -18,6 +18,10 @@ namespace PSIP_Udvardi_csh
     public partial class Form1 : Form
     {
         //IDEA:: Create a class that will carry the statistics details accross the threads
+        PacketDevice loopback1; //Global variables
+        PacketDevice loopback2;
+        PacketCommunicator lpbckcomm1;
+        PacketCommunicator lpbckcomm2;
         public Form1()
         {
             InitializeComponent();
@@ -28,10 +32,10 @@ namespace PSIP_Udvardi_csh
         {
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
             PacketDevice loopback1_recv = allDevices[0]; //allDevices[0] = GNSloopback
-            PacketDevice loopback2_recv = allDevices[4]; //allDevices[4] = GNSloopback2
+            PacketDevice loopback2_recv = allDevices[5]; //allDevices[4] = GNSloopback2
 
             PacketDevice loopback1_send = allDevices[0]; //allDevices[0] = GNSloopback
-            PacketDevice loopback2_send = allDevices[4]; //allDevices[4] = GNSloopback2
+            PacketDevice loopback2_send = allDevices[5]; //allDevices[4] = GNSloopback2
 
 
             Console.WriteLine("Int1: " + loopback1_recv.Description);
@@ -58,6 +62,7 @@ namespace PSIP_Udvardi_csh
                 Console.WriteLine("Listen on " + recvInterface.Description + "name: " + recvInterface.Name);
                 
                 Packet packet;
+                Packet forSending;
                 do
                 {                    
                     PacketCommunicatorReceiveResult result = communicator_L1_r.ReceivePacket(out packet);
@@ -67,13 +72,13 @@ namespace PSIP_Udvardi_csh
                             // Timeout elapsed
                             continue;
                         case PacketCommunicatorReceiveResult.Ok:
-                            Packet forSending = packet;
-                            Console.WriteLine(recvInterface.Name + " length:" +
+                            forSending = packet;
+                            Console.WriteLine("RECV" + recvInterface.Name + " length:" +
                                               packet.Length + "Eth:" + packet.Ethernet);
                             //Make stats with a dictionary.IDictionary<string, int> dict = new Dictionary<string, int>();
-                           // Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck1(sendingInterface, forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-                           // trdLoop1_snd.IsBackground = true;
-                           // trdLoop1_snd.Start();
+                            Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck1(sendingInterface, forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+                            trdLoop1_snd.IsBackground = true;
+                            trdLoop1_snd.Start();
                             break;
                         default:
                             throw new InvalidOperationException("The result " + result + " shoudl never be reached here");
@@ -105,12 +110,12 @@ namespace PSIP_Udvardi_csh
                             continue;
                         case PacketCommunicatorReceiveResult.Ok:
                             Packet forSending = packet;
-                            Console.WriteLine(recvInterface.Name + " length:" +
+                            Console.WriteLine("RECV" + recvInterface.Name + " length:" +
                                               packet.Length + " Eth:" + packet.Ethernet);
                             //Make stats with a dictionary.IDictionary<string, int> dict = new Dictionary<string, int>();
-                            //Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck2(sendingInterface, forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-                            //trdLoop1_snd.IsBackground = true;
-                            //trdLoop1_snd.Start();
+                            Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck2(sendingInterface, forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+                            trdLoop1_snd.IsBackground = true;
+                            trdLoop1_snd.Start();
                             break;
                         default:
                             throw new InvalidOperationException("The result " + result + " shoudl never be reached here");
@@ -126,7 +131,7 @@ namespace PSIP_Udvardi_csh
             {
                 
                 communicator_L1_s.SendPacket(toSend);
-                Console.WriteLine(sendingInterface.Name +" Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
+                Console.WriteLine("SEND" + sendingInterface.Name +" Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
                 
             }
                 return 0;
@@ -140,7 +145,7 @@ namespace PSIP_Udvardi_csh
             {
 
                 communicator_L2_s.SendPacket(toSend);
-                Console.WriteLine(sendingInterface.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
+                Console.WriteLine("SEND" + sendingInterface.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
 
             }
             return 0;
@@ -175,7 +180,7 @@ namespace PSIP_Udvardi_csh
 
         public void UiUpdateLabel()
         {
-            this.progressBar1.Value = 5;
+            
         }
         private void ThreadTask(PacketDevice deviceInterfaceLoopBck)
         {
