@@ -30,23 +30,25 @@ namespace PSIP_Udvardi_csh
             
         }
 
-        private void Form1_Load_1(object sender, EventArgs e)
+        public void Form1_Load_1(object sender, EventArgs e)
         {
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
             loopback1 = allDevices[0]; //allDevices[0] = GNSloopback
             loopback2 = allDevices[5]; //allDevices[5] = GNSloopback2
 
 
-            lpbckcomm1 = loopback1.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
-            lpbckcomm2 = loopback2.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal, 1000);
+            lpbckcomm1 = loopback1.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal, 10);
+            lpbckcomm2 = loopback2.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal, 10);
 
             Console.WriteLine("Int1: " + loopback1.Description);
             Console.WriteLine("Int2: " + loopback2.Description);
-;
+            
+
 
             Thread trdLoop1 = new Thread(() => start_sniffing_lpbck1());//equal> new Thread(delegate() { this.start_sniffing_lpbck1(); });
-            trdLoop1.Start();
+           
             Thread trdLoop2 = new Thread(() => start_sniffing_lpbck2());
+            trdLoop1.Start();
             trdLoop2.Start();
         }
 
@@ -56,87 +58,56 @@ namespace PSIP_Udvardi_csh
         public void start_sniffing_lpbck1()
         {
 
-                Console.WriteLine("Listen on " + loopback1.Description + "name: " + loopback1.Name);
-                
-                Packet packet;
-                Packet forSending;
-
-           
-                do
-                {                    
-                    PacketCommunicatorReceiveResult result = lpbckcomm1.ReceivePacket(out packet);
-                    switch (result)
-                    {
-                        case PacketCommunicatorReceiveResult.Timeout:
-                            // Timeout elapsed
-                            continue;
-                        case PacketCommunicatorReceiveResult.Ok:
-                            forSending = packet;
-                            Console.WriteLine("length:" +
-                                              packet.Length + "Eth:" + packet.Ethernet);
-
-                            //send a recieved packet on loopback 1 from loopback2
-                            Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck1(forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-                            trdLoop1_snd.Start();
-                            break;
-                        default:
-                            throw new InvalidOperationException("The result " + result + " shoudl never be reached here");
-                    }
-                } while (true);
-
-
-                
+            Console.WriteLine("Listen on " + loopback1.Description + "name: " + loopback1.Name);
+            lpbckcomm1.ReceivePackets(0, PacketHandler1);              
             
+        }
+        public void PacketHandler1(Packet packet)
+        {
+            //send a recieved packet on loopback 1 from loopback2
+            lpbckcomm2.SendPacket(packet);
+            //Thread trdLoop1_snd = new Thread(() => send_packet_lpbck1(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+            //trdLoop1_snd.Start();
+            Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" + packet.Length);
+        }
+
+        public int send_packet_lpbck1(Packet toSend)
+        {
+            lpbckcomm2.SendPacket(toSend);
+            Console.WriteLine("SEND L2 " + loopback2.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
+
+            return 0;
         }
 
         public void start_sniffing_lpbck2()
         {
  
-                Console.WriteLine("Listen on " + loopback2.Description + "name: " + loopback2.Name);
-                //Second port Interface
-
-                Packet packet;
-                do
-                {
-                    PacketCommunicatorReceiveResult result = lpbckcomm2.ReceivePacket(out packet);
-                    switch (result)
-                    {
-                        case PacketCommunicatorReceiveResult.Timeout:
-                            // Timeout elapsed
-                            continue;
-                        case PacketCommunicatorReceiveResult.Ok:
-                            Packet forSending = packet;
-                            Console.WriteLine("length:" +
-                                              packet.Length + " Eth:" + packet.Ethernet);
-                            
-                        //send a packet recived on loopback2 from loopback1
-                            Thread trdLoop2_snd = new Thread(() => send_packet_lpbck2(forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-                            trdLoop2_snd.Start();
-                            break;
-                        default:
-                            throw new InvalidOperationException("The result " + result + " shoudl never be reached here");
-                    }
-                } while (true);
+            Console.WriteLine("Listen on " + loopback2.Description + "name: " + loopback2.Name);
+            //Second port Interface
+            lpbckcomm2.ReceivePackets(0, PacketHandler2);
            
         }
-        public int send_packet_lpbck1(Packet toSend)
-        {
 
-                
-                lpbckcomm2.SendPacket(toSend);
-                Console.WriteLine("SEND" + loopback2.Name +" Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
-                
-                return 0;
+        public void PacketHandler2(Packet packet)
+        {
+            lpbckcomm1.SendPacket(packet);
+            //send a recieved packet on loopback 1 from loopback2
+            //Thread trdLoop2_snd = new Thread(() => send_packet_lpbck2(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+            //trdLoop2_snd.Start();
+            Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" + packet.Length);
         }
 
-        private int send_packet_lpbck2(Packet toSend)
+
+
+
+        public void send_packet_lpbck2(Packet toSend)
         {
 
                 lpbckcomm1.SendPacket(toSend);
-                Console.WriteLine("SEND" + loopback1.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
+                Console.WriteLine("SEND L1 " + loopback1.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
 
-            
-            return 0;
+
+            return;
         }
 
 
@@ -207,7 +178,7 @@ namespace PSIP_Udvardi_csh
                     Console.WriteLine(" (No description available)");
             }
 
-            PacketDevice loopback1 = allDevices[0];
+            PacketDevice loopback1 = allDevices[5];
 
             using (PacketCommunicator communicator =
                 loopback1.Open(1000, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1000))
