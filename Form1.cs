@@ -38,10 +38,10 @@ namespace PSIP_Udvardi_csh
             Console.WriteLine("Int2: " + loopback2_recv.Description);
 ;
 
-            Thread trdLoop1_recv = new Thread(() => this.start_sniffing_lpbck1(loopback2_send,loopback1_recv));//equal> new Thread(delegate() { this.start_sniffing_lpbck1(loopback2, loopback1); });
+            Thread trdLoop1_recv = new Thread(() => start_sniffing_lpbck1(loopback2_send,loopback1_recv));//equal> new Thread(delegate() { this.start_sniffing_lpbck1(loopback2, loopback1); });
             trdLoop1_recv.IsBackground = true;
             trdLoop1_recv.Start();
-            Thread trdLoop2_recv = new Thread(() => this.start_sniffing_lpbck2(loopback1_send, loopback2_recv));
+            Thread trdLoop2_recv = new Thread(() => start_sniffing_lpbck2(loopback1_send, loopback2_recv));
             trdLoop2_recv.IsBackground = true;
             trdLoop2_recv.Start();
         }
@@ -53,7 +53,7 @@ namespace PSIP_Udvardi_csh
         {
             using (PacketCommunicator communicator_L1_r =
                     recvInterface.Open(1000, 
-                    PacketDeviceOpenAttributes.NoCaptureLocal, 100))
+                    PacketDeviceOpenAttributes.NoCaptureLocal, 1))
             {
                 Console.WriteLine("Listen on " + recvInterface.Description + "name: " + recvInterface.Name);
                 
@@ -89,7 +89,7 @@ namespace PSIP_Udvardi_csh
         {
             using (PacketCommunicator communicator_L2_r =
                 recvInterface.Open(1000,
-                PacketDeviceOpenAttributes.NoCaptureLocal, 100))
+                PacketDeviceOpenAttributes.NoCaptureLocal, 1))
             {
                 Console.WriteLine("Listen on " + recvInterface.Description + "name: " + recvInterface.Name);
                 //Second port Interface
@@ -106,7 +106,7 @@ namespace PSIP_Udvardi_csh
                         case PacketCommunicatorReceiveResult.Ok:
                             Packet forSending = packet;
                             Console.WriteLine(recvInterface.Name + " length:" +
-                                              packet.Length + "Eth:" + packet.Ethernet);
+                                              packet.Length + " Eth:" + packet.Ethernet);
                             //Make stats with a dictionary.IDictionary<string, int> dict = new Dictionary<string, int>();
                             //Thread trdLoop1_snd = new Thread(() => this.send_packet_lpbck2(sendingInterface, forSending)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
                             //trdLoop1_snd.IsBackground = true;
