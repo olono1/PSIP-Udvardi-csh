@@ -27,8 +27,8 @@ namespace PSIP_Udvardi_csh
         private void Form1_Load_1(object sender, EventArgs e)
         {
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
-            PacketDevice loopback1 = allDevices[4];
-            PacketDevice loopback2 = allDevices[0];
+            PacketDevice loopback1 = allDevices[0];
+            PacketDevice loopback2 = allDevices[4];
             Console.WriteLine("Int1: " + loopback1.Description);
             Console.WriteLine("Int2: " + loopback2.Description);
             //Thread trdLoop1_snd = new Thread(() => this.ThreadTask(loopback1)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
@@ -93,8 +93,6 @@ namespace PSIP_Udvardi_csh
             {
                 communicator.SendPacket(toSend);
                 Console.WriteLine("Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
-                Console.WriteLine("Sending garbage Ethernet");
-                communicator.SendPacket(BuildEthernetPacket());
             }
             
 
