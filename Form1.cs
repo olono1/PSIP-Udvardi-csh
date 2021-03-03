@@ -51,32 +51,14 @@ namespace PSIP_Udvardi_csh
 
             Console.WriteLine("Int1: " + loopback1.Description);
             Console.WriteLine("Int2: " + loopback2.Description);
-
-            /*
-            using (PacketCommunicator communicator =
-               loopback2.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1))
-            {
-                
-                
-                communicator.SendPacket(BuildEthernetPacket("22222LOOP"));
-                communicator.SendPacket(BuildEthernetPacket("22222222LOOP"));
-            }
-            
-            
-            using (PacketCommunicator communicator =
-                loopback1.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1))
-            {
-                communicator.SendPacket(BuildEthernetPacket("1LOOPBACK1"));
-                communicator.SendPacket(BuildEthernetPacket("1LOOPBACK1"));
-            }
-            */
+/*
             port1_in_stat = new Dictionary<string, int>();
             port1_out_stat = new Dictionary<string, int>();
             port2_in_stat = new Dictionary<string, int>();
             port2_out_stat = new Dictionary<string, int>();
             initializeCounters();
 
-
+*/
             resetStatistics();
             Thread statisticsThrd = new Thread(() => update_statistics());
 
@@ -102,14 +84,15 @@ namespace PSIP_Udvardi_csh
         }
         public void PacketHandler1(Packet packet)
         {
+            /*
             IDictionary<string, int> toSendPacketStats = analysePacket(packet);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if (protocol.Value == 1) { port1_in_stat[protocol.Key]++; }
             }
+            */
             port1_in++;
-            //send a recieved packet on loopback 1 from loopback2
-            //lpbckcomm2.SendPacket(packet);
+          
             Thread trdLoop1_snd = new Thread(() => send_packet_lpbck1(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
             trdLoop1_snd.Start();
             Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" + packet.Length);
@@ -118,11 +101,13 @@ namespace PSIP_Udvardi_csh
 
         public void send_packet_lpbck1(Packet toSend)
         {
+            /*
             IDictionary<string, int> toSendPacketStats = analysePacket(toSend);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if (protocol.Value == 1) { port2_out_stat[protocol.Key]++; }
             }
+            */
             port2_out++;
             lpbckcomm2.SendPacket(toSend);
             Console.WriteLine("SEND L2 " + loopback2.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
@@ -134,7 +119,7 @@ namespace PSIP_Udvardi_csh
         {
  
             Console.WriteLine("Listen on " + loopback2.Description + "name: " + loopback2.Name);
-            //Second port Interface
+           
             lpbckcomm2.ReceivePackets(0, PacketHandler2);
             
         }
@@ -142,16 +127,15 @@ namespace PSIP_Udvardi_csh
         public void PacketHandler2(Packet packet)
         {
             //stats
+            /*
             IDictionary<string, int> toSendPacketStats = analysePacket(packet);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if (protocol.Value == 1) { port2_in_stat[protocol.Key]++; }
             }
+            */
             port2_in++;
-
-
-            //lpbckcomm1.SendPacket(packet);
-            //send a recieved packet on loopback 1 from loopback2
+           
             Thread trdLoop2_snd = new Thread(() => send_packet_lpbck2(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
             trdLoop2_snd.Start();
             Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" + packet.Length);
@@ -163,11 +147,13 @@ namespace PSIP_Udvardi_csh
         public void send_packet_lpbck2(Packet toSend)
         {
             //stats
+            /*
             IDictionary<string, int> toSendPacketStats = analysePacket(toSend);
             foreach(KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if(protocol.Value == 1) { port1_out_stat[protocol.Key]++; }
             }
+            */
 
             lpbckcomm1.SendPacket(toSend);
             Console.WriteLine("SEND L1 " + loopback1.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
@@ -309,6 +295,13 @@ namespace PSIP_Udvardi_csh
             while (true)
             {
                 this.p1InLabel.Invoke(new MethodInvoker(delegate { this.p1InLabel.Text = port1_in.ToString(); }));
+                this.p2OutLabel.Invoke(new MethodInvoker(delegate { this.p2OutLabel.Text = port2_out.ToString(); }));
+                this.p1OutLabel.Invoke(new MethodInvoker(delegate { this.p1OutLabel.Text = port1_out.ToString(); }));
+                this.p2InLabel.Invoke(new MethodInvoker(delegate { this.p2InLabel.Text = port2_in.ToString(); }));
+               
+
+                /*
+
                 this.p1InEthLabel.Invoke(new MethodInvoker(delegate { this.p1InEthLabel.Text = port1_in_stat["eth"].ToString(); }));
                 this.p1InArpLabel.Invoke(new MethodInvoker(delegate { this.p1InArpLabel.Text = port1_in_stat["arp"].ToString(); }));
                 this.p1InIpLabel.Invoke(new MethodInvoker(delegate { this.p1InIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
@@ -318,7 +311,7 @@ namespace PSIP_Udvardi_csh
 
 
 
-                this.p1OutLabel.Invoke(new MethodInvoker(delegate { this.p1OutLabel.Text = port1_out.ToString(); }));
+                
                 this.p1OutEthLabel.Invoke(new MethodInvoker(delegate { this.p1OutEthLabel.Text = port1_in_stat["eth"].ToString(); }));
                 this.p1OutArpLabel.Invoke(new MethodInvoker(delegate { this.p1OutArpLabel.Text = port1_in_stat["arp"].ToString(); }));
                 this.p1OutIpLabel.Invoke(new MethodInvoker(delegate { this.p1OutIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
@@ -327,7 +320,7 @@ namespace PSIP_Udvardi_csh
                 this.p1OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p1OutHttpLabel.Text = port1_in_stat["http"].ToString(); }));
 
 
-                this.p2InLabel.Invoke(new MethodInvoker(delegate { this.p2InLabel.Text = port2_in.ToString(); }));
+               
                 this.p2InEthLabel.Invoke(new MethodInvoker(delegate { this.p2InEthLabel.Text = port1_in_stat["eth"].ToString(); }));
                 this.p2InArpLabel.Invoke(new MethodInvoker(delegate { this.p2InArpLabel.Text = port1_in_stat["arp"].ToString(); }));
                 this.p2InIpLabel.Invoke(new MethodInvoker(delegate { this.p2InIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
@@ -336,14 +329,15 @@ namespace PSIP_Udvardi_csh
                 this.p2InHttpLabel.Invoke(new MethodInvoker(delegate { this.p2InHttpLabel.Text = port1_in_stat["http"].ToString(); }));
 
 
-                this.p2OutLabel.Invoke(new MethodInvoker(delegate { this.p2OutLabel.Text = port2_out.ToString(); }));
-                this.p2OutLabel.Invoke(new MethodInvoker(delegate { this.p2OutLabel.Text = port1_out.ToString(); }));
+         
+
                 this.p2OutEthLabel.Invoke(new MethodInvoker(delegate { this.p2OutEthLabel.Text = port1_in_stat["eth"].ToString(); }));
                 this.p2OutArpLabel.Invoke(new MethodInvoker(delegate { this.p2OutArpLabel.Text = port1_in_stat["arp"].ToString(); }));
                 this.p2OutIpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
                 this.p2OutIcmpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIcmpLabel.Text = port1_in_stat["icmp"].ToString(); }));
                 this.p2OutTcpLabel.Invoke(new MethodInvoker(delegate { this.p2OutTcpLabel.Text = port1_in_stat["tcp"].ToString(); }));
                 this.p2OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p2OutHttpLabel.Text = port1_in_stat["http"].ToString(); }));
+                */
                 Thread.Sleep(100);
             }
 
@@ -352,7 +346,7 @@ namespace PSIP_Udvardi_csh
         public void resetStatistics()
         {
 
-            resetCounters();
+            //resetCounters();
             port1_in = 0;
             port1_out = 0;
             port2_in = 0;
