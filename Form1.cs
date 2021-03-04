@@ -43,11 +43,16 @@ namespace PSIP_Udvardi_csh
         {
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
             loopback1 = allDevices[0]; //allDevices[0] = GNSloopback2
-            loopback2 = allDevices[7]; //allDevices[7] = GNSloopback
+            loopback2 = allDevices[6]; //allDevices[7] = GNSloopback
 
 
             lpbckcomm1 = loopback1.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1);
             lpbckcomm2 = loopback2.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1);
+
+
+
+            this.LoopbackLbl.Text = loopback1.Description;
+            this.LoopbackLbl2.Text = loopback2.Description;
 
             Console.WriteLine("Int1: " + loopback1.Description);
             Console.WriteLine("Int2: " + loopback2.Description);

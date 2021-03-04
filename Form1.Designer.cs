@@ -90,6 +90,8 @@ namespace PSIP_Udvardi_csh
             this.p2InIpLabel = new System.Windows.Forms.Label();
             this.p2InEthLabel = new System.Windows.Forms.Label();
             this.label52 = new System.Windows.Forms.Label();
+            this.LoopbackLbl = new System.Windows.Forms.Label();
+            this.LoopbackLbl2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnClickThis
@@ -646,11 +648,33 @@ namespace PSIP_Udvardi_csh
             this.label52.TabIndex = 53;
             this.label52.Text = "Eth";
             // 
+            // LoopbackLbl
+            // 
+            this.LoopbackLbl.AutoSize = true;
+            this.LoopbackLbl.Location = new System.Drawing.Point(315, 12);
+            this.LoopbackLbl.MaximumSize = new System.Drawing.Size(200, 0);
+            this.LoopbackLbl.Name = "LoopbackLbl";
+            this.LoopbackLbl.Size = new System.Drawing.Size(35, 13);
+            this.LoopbackLbl.TabIndex = 65;
+            this.LoopbackLbl.Text = "label6";
+            // 
+            // LoopbackLbl2
+            // 
+            this.LoopbackLbl2.AutoSize = true;
+            this.LoopbackLbl2.Location = new System.Drawing.Point(587, 12);
+            this.LoopbackLbl2.MaximumSize = new System.Drawing.Size(200, 0);
+            this.LoopbackLbl2.Name = "LoopbackLbl2";
+            this.LoopbackLbl2.Size = new System.Drawing.Size(35, 13);
+            this.LoopbackLbl2.TabIndex = 66;
+            this.LoopbackLbl2.Text = "label8";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(747, 450);
+            this.Controls.Add(this.LoopbackLbl2);
+            this.Controls.Add(this.LoopbackLbl);
             this.Controls.Add(this.p2InHttpLabel);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.p2InTcpLabel);
@@ -783,6 +807,8 @@ namespace PSIP_Udvardi_csh
         private System.Windows.Forms.Label p2InIpLabel;
         private System.Windows.Forms.Label p2InEthLabel;
         private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label LoopbackLbl;
+        private System.Windows.Forms.Label LoopbackLbl2;
     }
 }
 
