@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -33,17 +34,27 @@ namespace PSIP_Udvardi_csh
         IDictionary<string, int> port1_out_stat;
         IDictionary<string, int> port2_in_stat;
         IDictionary<string, int> port2_out_stat;
+
+        public static CamTable camTableClass;
+
+        
+
         public Form1()
         {
+            
+            
             InitializeComponent();
             
         }
 
         public void Form1_Load_1(object sender, EventArgs e)
         {
+            camTableClass = new CamTable();
+
+
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
             loopback1 = allDevices[0]; //allDevices[0] = GNSloopback2
-            loopback2 = allDevices[6]; //allDevices[7] = GNSloopback
+            loopback2 = allDevices[7]; //allDevices[7] = GNSloopback
 
 
             lpbckcomm1 = loopback1.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1);
@@ -79,6 +90,9 @@ namespace PSIP_Udvardi_csh
         
         public delegate void UpdateLabelUi();
 
+
+
+
         public void start_sniffing_lpbck1()
         {
 
@@ -97,7 +111,10 @@ namespace PSIP_Udvardi_csh
             }
             */
             port1_in++;
-          
+            packetHandlig newPacket = new packetHandlig(packet, 1);
+            camEntry newEntry = new camEntry(newPacket.MacAddrSource, 1, 300000);
+
+
             Thread trdLoop1_snd = new Thread(() => send_packet_lpbck1(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
             trdLoop1_snd.Start();
             Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" + packet.Length);
@@ -114,6 +131,9 @@ namespace PSIP_Udvardi_csh
             }
             */
             port2_out++;
+
+
+
             lpbckcomm2.SendPacket(toSend);
             Console.WriteLine("SEND L2 " + loopback2.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
 
