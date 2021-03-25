@@ -30,10 +30,10 @@ namespace PSIP_Udvardi_csh
         int port1_out;
         int port2_in;
         int port2_out;
-        IDictionary<string, int> port1_in_stat;
-        IDictionary<string, int> port1_out_stat;
-        IDictionary<string, int> port2_in_stat;
-        IDictionary<string, int> port2_out_stat;
+        ConcurrentDictionary<string, int> port1_in_stat;
+        ConcurrentDictionary<string, int> port1_out_stat;
+        ConcurrentDictionary<string, int> port2_in_stat;
+        ConcurrentDictionary<string, int> port2_out_stat;
 
         public static CamTable camTableClass;
 
@@ -54,7 +54,7 @@ namespace PSIP_Udvardi_csh
 
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
             loopback1 = allDevices[0]; //allDevices[0] = GNSloopback2
-            loopback2 = allDevices[7]; //allDevices[7] = GNSloopback
+            loopback2 = allDevices[6]; //allDevices[7] = GNSloopback
 
 
             lpbckcomm1 = loopback1.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1);
@@ -67,14 +67,14 @@ namespace PSIP_Udvardi_csh
 
             Console.WriteLine("Int1: " + loopback1.Description);
             Console.WriteLine("Int2: " + loopback2.Description);
-/*
-            port1_in_stat = new Dictionary<string, int>();
-            port1_out_stat = new Dictionary<string, int>();
-            port2_in_stat = new Dictionary<string, int>();
-            port2_out_stat = new Dictionary<string, int>();
+
+            port1_in_stat = new ConcurrentDictionary<string, int>();
+            port1_out_stat = new ConcurrentDictionary<string, int>();
+            port2_in_stat = new ConcurrentDictionary<string, int>();
+            port2_out_stat = new ConcurrentDictionary<string, int>();
             initializeCounters();
 
-*/
+
             resetStatistics();
             Thread statisticsThrd = new Thread(() => update_statistics());
 
@@ -103,13 +103,13 @@ namespace PSIP_Udvardi_csh
         }
         public void PacketHandler1(Packet packet)
         {
-            /*
+            
             IDictionary<string, int> toSendPacketStats = analysePacket(packet);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if (protocol.Value == 1) { port1_in_stat[protocol.Key]++; }
             }
-            */
+            
             port1_in++;
             packetHandlig newPacket = new packetHandlig(packet, 1);
             camEntry newEntry = new camEntry(newPacket.MacAddrSource, 1, 300000);
@@ -123,13 +123,13 @@ namespace PSIP_Udvardi_csh
 
         public void send_packet_lpbck1(Packet toSend)
         {
-            /*
+            
             IDictionary<string, int> toSendPacketStats = analysePacket(toSend);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if (protocol.Value == 1) { port2_out_stat[protocol.Key]++; }
             }
-            */
+            
             port2_out++;
 
 
@@ -152,13 +152,13 @@ namespace PSIP_Udvardi_csh
         public void PacketHandler2(Packet packet)
         {
             //stats
-            /*
+            
             IDictionary<string, int> toSendPacketStats = analysePacket(packet);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if (protocol.Value == 1) { port2_in_stat[protocol.Key]++; }
             }
-            */
+            
             port2_in++;
            
             Thread trdLoop2_snd = new Thread(() => send_packet_lpbck2(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
@@ -172,13 +172,13 @@ namespace PSIP_Udvardi_csh
         public void send_packet_lpbck2(Packet toSend)
         {
             //stats
-            /*
+            
             IDictionary<string, int> toSendPacketStats = analysePacket(toSend);
             foreach(KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if(protocol.Value == 1) { port1_out_stat[protocol.Key]++; }
             }
-            */
+            
 
             lpbckcomm1.SendPacket(toSend);
             Console.WriteLine("SEND L1 " + loopback1.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
@@ -325,7 +325,7 @@ namespace PSIP_Udvardi_csh
                 this.p2InLabel.Invoke(new MethodInvoker(delegate { this.p2InLabel.Text = port2_in.ToString(); }));
                
 
-                /*
+                
 
                 this.p1InEthLabel.Invoke(new MethodInvoker(delegate { this.p1InEthLabel.Text = port1_in_stat["eth"].ToString(); }));
                 this.p1InArpLabel.Invoke(new MethodInvoker(delegate { this.p1InArpLabel.Text = port1_in_stat["arp"].ToString(); }));
@@ -362,7 +362,7 @@ namespace PSIP_Udvardi_csh
                 this.p2OutIcmpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIcmpLabel.Text = port1_in_stat["icmp"].ToString(); }));
                 this.p2OutTcpLabel.Invoke(new MethodInvoker(delegate { this.p2OutTcpLabel.Text = port1_in_stat["tcp"].ToString(); }));
                 this.p2OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p2OutHttpLabel.Text = port1_in_stat["http"].ToString(); }));
-                */
+                
                 Thread.Sleep(100);
             }
 
@@ -412,30 +412,30 @@ namespace PSIP_Udvardi_csh
 
         private void initializeCounters()
         {
-            port1_in_stat.Add("eth", 0);
-            port1_in_stat.Add("ipv4", 0);
-            port1_in_stat.Add("icmp", 0);
-            port1_in_stat.Add("tcp", 0);
-            port1_in_stat.Add("http", 0);
-            port1_in_stat.Add("arp", 0);
-            port1_out_stat.Add("eth", 0);
-            port1_out_stat.Add("ipv4", 0);
-            port1_out_stat.Add("icmp", 0);
-            port1_out_stat.Add("tcp", 0);
-            port1_out_stat.Add("http", 0);
-            port1_out_stat.Add("arp", 0);
-            port2_in_stat.Add("eth", 0);
-            port2_in_stat.Add("ipv4", 0);
-            port2_in_stat.Add("icmp", 0);
-            port2_in_stat.Add("tcp", 0);
-            port2_in_stat.Add("http", 0);
-            port2_in_stat.Add("arp", 0);
-            port2_out_stat.Add("eth", 0);
-            port2_out_stat.Add("ipv4", 0);
-            port2_out_stat.Add("icmp", 0);
-            port2_out_stat.Add("tcp", 0);
-            port2_out_stat.Add("http", 0);
-            port2_out_stat.Add("arp", 0);
+            port1_in_stat.TryAdd("eth", 0);
+            port1_in_stat.TryAdd("ipv4", 0);
+            port1_in_stat.TryAdd("icmp", 0);
+            port1_in_stat.TryAdd("tcp", 0);
+            port1_in_stat.TryAdd("http", 0);
+            port1_in_stat.TryAdd("arp", 0);
+            port1_out_stat.TryAdd("eth", 0);
+            port1_out_stat.TryAdd("ipv4", 0);
+            port1_out_stat.TryAdd("icmp", 0);
+            port1_out_stat.TryAdd("tcp", 0);
+            port1_out_stat.TryAdd("http", 0);
+            port1_out_stat.TryAdd("arp", 0);
+            port2_in_stat.TryAdd("eth", 0);
+            port2_in_stat.TryAdd("ipv4", 0);
+            port2_in_stat.TryAdd("icmp", 0);
+            port2_in_stat.TryAdd("tcp", 0);
+            port2_in_stat.TryAdd("http", 0);
+            port2_in_stat.TryAdd("arp", 0);
+            port2_out_stat.TryAdd("eth", 0);
+            port2_out_stat.TryAdd("ipv4", 0);
+            port2_out_stat.TryAdd("icmp", 0);
+            port2_out_stat.TryAdd("tcp", 0);
+            port2_out_stat.TryAdd("http", 0);
+            port2_out_stat.TryAdd("arp", 0);
         }
 
         private void label11_Click(object sender, EventArgs e)
