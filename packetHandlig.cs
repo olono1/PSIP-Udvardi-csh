@@ -13,8 +13,8 @@ namespace PSIP_Udvardi_csh
         private Packet packetToProcess;
         private int ingressPort;
         private int egressPort;
-        private String macAddrSource;
-        private String macAddrDestination;
+        private string macAddrSource;
+        private string macAddrDestination;
 
 
         public packetHandlig(Packet packetToProcess, int ingressPort)
@@ -28,14 +28,15 @@ namespace PSIP_Udvardi_csh
         private void savePacketInfo()
         {
             MacAddrSource = PacketToProcess.Ethernet.Source.ToString();
-            macAddrDestination = PacketToProcess.Ethernet.Destination.ToString();
+            MacAddrDestination = PacketToProcess.Ethernet.Destination.ToString();
 
-            Console.WriteLine("*SrcAddrMAC: " + MacAddrSource + "  *DstAddrMAC: " + macAddrDestination);
+            Console.WriteLine("*SrcAddrMAC: " + MacAddrSource + "  *DstAddrMAC: " + MacAddrDestination);
         }
 
         public int EgressPort { get => egressPort; set => egressPort = value; }
         public string MacAddrSource { get => macAddrSource; set => macAddrSource = value; }
         public Packet PacketToProcess { get => packetToProcess; set => packetToProcess = value; }
         public int IngressPort { get => ingressPort; set => ingressPort = value; }
+        public string MacAddrDestination { get => macAddrDestination; set => macAddrDestination = value; }
     }
 }

@@ -112,7 +112,10 @@ namespace PSIP_Udvardi_csh
             
             port1_in++;
             packetHandlig newPacket = new packetHandlig(packet, 1);
-            camEntry newEntry = new camEntry(newPacket.MacAddrSource, 1, 300000);
+
+            newPacket = camTableClass.processPacket(newPacket);
+
+            
 
 
             Thread trdLoop1_snd = new Thread(() => send_packet_lpbck1(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
@@ -362,11 +365,28 @@ namespace PSIP_Udvardi_csh
                 this.p2OutIcmpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIcmpLabel.Text = port1_in_stat["icmp"].ToString(); }));
                 this.p2OutTcpLabel.Invoke(new MethodInvoker(delegate { this.p2OutTcpLabel.Text = port1_in_stat["tcp"].ToString(); }));
                 this.p2OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p2OutHttpLabel.Text = port1_in_stat["http"].ToString(); }));
-                
-                Thread.Sleep(100);
+
+                updateCamTableUI();
+
+
+                Thread.Sleep((int)TimeSpan.FromSeconds(1).TotalMilliseconds);
             }
 
         }
+
+        public void updateCamTableUI()
+        {
+            CamTableBox.Invoke(new MethodInvoker(delegate { this.CamTableBox.Items.Clear(); }));
+
+            foreach (KeyValuePair<string, camEntry> tableEntry in CamTable.CamTableDict)
+            {
+                CamTableBox.Invoke(new MethodInvoker(delegate{ CamTableBox.Items.Add(tableEntry.Value); }));
+            }
+
+            this.entriesLbl.Invoke(new MethodInvoker(delegate { this.entriesLbl.Text = CamTable.CamTableDict.Count.ToString(); }));
+
+        }
+
 
         public void resetStatistics()
         {

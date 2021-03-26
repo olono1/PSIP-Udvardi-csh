@@ -13,10 +13,15 @@ namespace PSIP_Udvardi_csh
         private string macAddress;
         private int port;
         private Timer entryTimeout;
-        
-        
+        DateTime timerStart;
+        private double timeoutValueSeconds;
 
-        public camEntry(string macAddress, int port_recv, int timeMilisec)
+
+
+        public Timer EntryTimeout { get => entryTimeout; set => entryTimeout = value; }
+        public int Port { get => port; set => port = value; }
+
+        public camEntry(string macAddress, int port_recv, double timeSeconds)
         {
             
 
@@ -26,29 +31,64 @@ namespace PSIP_Udvardi_csh
             
 
             CamTable.CamTableDict.TryAdd(macAddress, this);
+            
 
             entryTimeout = new Timer();
-            entryTimeout.Interval = timeMilisec;
+            entryTimeout.Interval = TimeSpan.FromSeconds(timeSeconds).TotalMilliseconds;
             entryTimeout.Elapsed += removeMe;
-
+            
+            timerStart = DateTime.Now;
             entryTimeout.Enabled = true;
-
+            timeoutValueSeconds = timeSeconds;
 
         }
+
+
+        private void initializeNewTimer(double timeSeconds)
+        {
+            entryTimeout.Stop();
+            entryTimeout.Dispose();
+
+            entryTimeout = new Timer();
+            entryTimeout.Interval = TimeSpan.FromSeconds(timeSeconds).TotalMilliseconds;
+            entryTimeout.Elapsed += removeMe;
+            timerStart = DateTime.Now;
+            entryTimeout.Enabled = true;
+            timeoutValueSeconds = timeSeconds;
+        }
+
+        public double getTimeRemaining()
+        {
+            TimeSpan timerRunningFor = DateTime.Now - timerStart;
+
+            return timeoutValueSeconds - timerRunningFor.TotalSeconds;
+
+        }
+
+
 
         private void removeMe(object sender, EventArgs e)
         {
             if(CamTable.CamTableDict.TryRemove(macAddress, out camEntry deletedEntry))
             {
+                entryTimeout.Stop();
+                entryTimeout.Dispose();
                 Console.WriteLine(" Successfully deleted:" + deletedEntry.macAddress);
             }
 
             
         }
 
-        public void resetTimer(int newTimeout)
+        public void resetTimer(double newTimeoutSeconds)
         {
-            entryTimeout.Interval = newTimeout;
+            initializeNewTimer(newTimeoutSeconds);
+
         }
+
+        public override string ToString()
+        {
+            return macAddress + " Port:" + port + " Timeout: " + getTimeRemaining() + "s";
+        }
+
     }
 }

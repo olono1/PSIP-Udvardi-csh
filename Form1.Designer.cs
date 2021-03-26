@@ -32,7 +32,7 @@ namespace PSIP_Udvardi_csh
             this.btnClickThis = new System.Windows.Forms.Button();
             this.lblHelloWorld = new System.Windows.Forms.Label();
             this.descLbl = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.CamTableBox = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -92,11 +92,13 @@ namespace PSIP_Udvardi_csh
             this.label52 = new System.Windows.Forms.Label();
             this.LoopbackLbl = new System.Windows.Forms.Label();
             this.LoopbackLbl2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.entriesLbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnClickThis
             // 
-            this.btnClickThis.Location = new System.Drawing.Point(192, 12);
+            this.btnClickThis.Location = new System.Drawing.Point(234, 12);
             this.btnClickThis.Name = "btnClickThis";
             this.btnClickThis.Size = new System.Drawing.Size(75, 23);
             this.btnClickThis.TabIndex = 0;
@@ -124,13 +126,13 @@ namespace PSIP_Udvardi_csh
             this.descLbl.Text = "Port1 (Eth 3)";
             this.descLbl.Click += new System.EventHandler(this.descLbl_Click);
             // 
-            // listBox1
+            // CamTableBox
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 12);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(174, 407);
-            this.listBox1.TabIndex = 4;
+            this.CamTableBox.FormattingEnabled = true;
+            this.CamTableBox.Location = new System.Drawing.Point(12, 12);
+            this.CamTableBox.Name = "CamTableBox";
+            this.CamTableBox.Size = new System.Drawing.Size(216, 407);
+            this.CamTableBox.TabIndex = 4;
             // 
             // label1
             // 
@@ -216,7 +218,7 @@ namespace PSIP_Udvardi_csh
             // rstBtn
             // 
             this.rstBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.rstBtn.Location = new System.Drawing.Point(192, 349);
+            this.rstBtn.Location = new System.Drawing.Point(234, 348);
             this.rstBtn.Name = "rstBtn";
             this.rstBtn.Size = new System.Drawing.Size(75, 23);
             this.rstBtn.TabIndex = 17;
@@ -668,11 +670,31 @@ namespace PSIP_Udvardi_csh
             this.LoopbackLbl2.TabIndex = 66;
             this.LoopbackLbl2.Text = "label8";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 422);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(42, 13);
+            this.label6.TabIndex = 67;
+            this.label6.Text = "Entries:";
+            // 
+            // entriesLbl
+            // 
+            this.entriesLbl.AutoSize = true;
+            this.entriesLbl.Location = new System.Drawing.Point(70, 422);
+            this.entriesLbl.Name = "entriesLbl";
+            this.entriesLbl.Size = new System.Drawing.Size(35, 13);
+            this.entriesLbl.TabIndex = 68;
+            this.entriesLbl.Text = "label8";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(747, 450);
+            this.Controls.Add(this.entriesLbl);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.LoopbackLbl2);
             this.Controls.Add(this.LoopbackLbl);
             this.Controls.Add(this.p2InHttpLabel);
@@ -732,7 +754,7 @@ namespace PSIP_Udvardi_csh
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.CamTableBox);
             this.Controls.Add(this.descLbl);
             this.Controls.Add(this.lblHelloWorld);
             this.Controls.Add(this.btnClickThis);
@@ -749,7 +771,6 @@ namespace PSIP_Udvardi_csh
         private System.Windows.Forms.Button btnClickThis;
         private System.Windows.Forms.Label lblHelloWorld;
         private System.Windows.Forms.Label descLbl;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
@@ -809,6 +830,9 @@ namespace PSIP_Udvardi_csh
         private System.Windows.Forms.Label label52;
         private System.Windows.Forms.Label LoopbackLbl;
         private System.Windows.Forms.Label LoopbackLbl2;
+        private System.Windows.Forms.ListBox CamTableBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label entriesLbl;
     }
 }
 
