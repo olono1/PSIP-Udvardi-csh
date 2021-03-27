@@ -79,6 +79,12 @@ namespace PSIP_Udvardi_csh
             
         }
 
+        public void stopAndDisposeTimer()
+        {
+            entryTimeout.Stop();
+            entryTimeout.Dispose();
+        }
+
         public void resetTimer(double newTimeoutSeconds)
         {
             initializeNewTimer(newTimeoutSeconds);
@@ -87,7 +93,7 @@ namespace PSIP_Udvardi_csh
 
         public override string ToString()
         {
-            return macAddress + " Port:" + port + " Timeout: " + getTimeRemaining() + "s";
+            return macAddress + " Port:" + port + " Timeout: " + Math.Floor(getTimeRemaining()) + "s";
         }
 
     }

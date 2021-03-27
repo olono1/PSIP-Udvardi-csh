@@ -94,15 +94,28 @@ namespace PSIP_Udvardi_csh
             this.LoopbackLbl2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.entriesLbl = new System.Windows.Forms.Label();
+            this.timeoutValue = new System.Windows.Forms.NumericUpDown();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.p1OutUdpLabel = new System.Windows.Forms.Label();
+            this.p2InUdpLabel = new System.Windows.Forms.Label();
+            this.p1InUdpLabel = new System.Windows.Forms.Label();
+            this.p2OutUdpLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.timeoutValue)).BeginInit();
             this.SuspendLayout();
             // 
             // btnClickThis
             // 
             this.btnClickThis.Location = new System.Drawing.Point(234, 12);
             this.btnClickThis.Name = "btnClickThis";
-            this.btnClickThis.Size = new System.Drawing.Size(75, 23);
+            this.btnClickThis.Size = new System.Drawing.Size(69, 50);
             this.btnClickThis.TabIndex = 0;
-            this.btnClickThis.Text = "Click Me!";
+            this.btnClickThis.Text = "Print Interfaces to Console";
             this.btnClickThis.UseVisualStyleBackColor = true;
             this.btnClickThis.Click += new System.EventHandler(this.btnClickThis_Click);
             // 
@@ -155,7 +168,7 @@ namespace PSIP_Udvardi_csh
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(332, 256);
+            this.label3.Location = new System.Drawing.Point(332, 284);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(30, 13);
             this.label3.TabIndex = 7;
@@ -164,7 +177,7 @@ namespace PSIP_Udvardi_csh
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(603, 255);
+            this.label4.Location = new System.Drawing.Point(603, 283);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(18, 13);
             this.label4.TabIndex = 8;
@@ -191,7 +204,7 @@ namespace PSIP_Udvardi_csh
             // p1OutLabel
             // 
             this.p1OutLabel.AutoSize = true;
-            this.p1OutLabel.Location = new System.Drawing.Point(433, 255);
+            this.p1OutLabel.Location = new System.Drawing.Point(433, 283);
             this.p1OutLabel.Name = "p1OutLabel";
             this.p1OutLabel.Size = new System.Drawing.Size(13, 13);
             this.p1OutLabel.TabIndex = 14;
@@ -209,7 +222,7 @@ namespace PSIP_Udvardi_csh
             // p2InLabel
             // 
             this.p2InLabel.AutoSize = true;
-            this.p2InLabel.Location = new System.Drawing.Point(683, 255);
+            this.p2InLabel.Location = new System.Drawing.Point(683, 283);
             this.p2InLabel.Name = "p2InLabel";
             this.p2InLabel.Size = new System.Drawing.Size(16, 13);
             this.p2InLabel.TabIndex = 16;
@@ -218,7 +231,7 @@ namespace PSIP_Udvardi_csh
             // rstBtn
             // 
             this.rstBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.rstBtn.Location = new System.Drawing.Point(234, 348);
+            this.rstBtn.Location = new System.Drawing.Point(493, 278);
             this.rstBtn.Name = "rstBtn";
             this.rstBtn.Size = new System.Drawing.Size(75, 23);
             this.rstBtn.TabIndex = 17;
@@ -293,7 +306,7 @@ namespace PSIP_Udvardi_csh
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(347, 201);
+            this.label16.Location = new System.Drawing.Point(347, 229);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(28, 13);
             this.label16.TabIndex = 25;
@@ -302,7 +315,7 @@ namespace PSIP_Udvardi_csh
             // p1InTcpLabel
             // 
             this.p1InTcpLabel.AutoSize = true;
-            this.p1InTcpLabel.Location = new System.Drawing.Point(403, 201);
+            this.p1InTcpLabel.Location = new System.Drawing.Point(403, 229);
             this.p1InTcpLabel.Name = "p1InTcpLabel";
             this.p1InTcpLabel.Size = new System.Drawing.Size(41, 13);
             this.p1InTcpLabel.TabIndex = 26;
@@ -311,7 +324,7 @@ namespace PSIP_Udvardi_csh
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(339, 228);
+            this.label18.Location = new System.Drawing.Point(339, 256);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(36, 13);
             this.label18.TabIndex = 27;
@@ -320,7 +333,7 @@ namespace PSIP_Udvardi_csh
             // p1InHttpLabel
             // 
             this.p1InHttpLabel.AutoSize = true;
-            this.p1InHttpLabel.Location = new System.Drawing.Point(402, 227);
+            this.p1InHttpLabel.Location = new System.Drawing.Point(402, 255);
             this.p1InHttpLabel.Name = "p1InHttpLabel";
             this.p1InHttpLabel.Size = new System.Drawing.Size(41, 13);
             this.p1InHttpLabel.TabIndex = 28;
@@ -329,7 +342,7 @@ namespace PSIP_Udvardi_csh
             // p2OutHttpLabel
             // 
             this.p2OutHttpLabel.AutoSize = true;
-            this.p2OutHttpLabel.Location = new System.Drawing.Point(666, 227);
+            this.p2OutHttpLabel.Location = new System.Drawing.Point(666, 255);
             this.p2OutHttpLabel.Name = "p2OutHttpLabel";
             this.p2OutHttpLabel.Size = new System.Drawing.Size(41, 13);
             this.p2OutHttpLabel.TabIndex = 40;
@@ -338,7 +351,7 @@ namespace PSIP_Udvardi_csh
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(596, 228);
+            this.label21.Location = new System.Drawing.Point(596, 256);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(36, 13);
             this.label21.TabIndex = 39;
@@ -347,7 +360,7 @@ namespace PSIP_Udvardi_csh
             // p2OutTcpLabel
             // 
             this.p2OutTcpLabel.AutoSize = true;
-            this.p2OutTcpLabel.Location = new System.Drawing.Point(667, 201);
+            this.p2OutTcpLabel.Location = new System.Drawing.Point(667, 229);
             this.p2OutTcpLabel.Name = "p2OutTcpLabel";
             this.p2OutTcpLabel.Size = new System.Drawing.Size(41, 13);
             this.p2OutTcpLabel.TabIndex = 38;
@@ -356,7 +369,7 @@ namespace PSIP_Udvardi_csh
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(604, 201);
+            this.label23.Location = new System.Drawing.Point(604, 229);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(28, 13);
             this.label23.TabIndex = 37;
@@ -437,7 +450,7 @@ namespace PSIP_Udvardi_csh
             // p1OutHttpLabel
             // 
             this.p1OutHttpLabel.AutoSize = true;
-            this.p1OutHttpLabel.Location = new System.Drawing.Point(411, 403);
+            this.p1OutHttpLabel.Location = new System.Drawing.Point(409, 458);
             this.p1OutHttpLabel.Name = "p1OutHttpLabel";
             this.p1OutHttpLabel.Size = new System.Drawing.Size(35, 13);
             this.p1OutHttpLabel.TabIndex = 52;
@@ -446,7 +459,7 @@ namespace PSIP_Udvardi_csh
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(339, 403);
+            this.label32.Location = new System.Drawing.Point(337, 458);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(36, 13);
             this.label32.TabIndex = 51;
@@ -455,7 +468,7 @@ namespace PSIP_Udvardi_csh
             // p1OutTcpLabel
             // 
             this.p1OutTcpLabel.AutoSize = true;
-            this.p1OutTcpLabel.Location = new System.Drawing.Point(405, 376);
+            this.p1OutTcpLabel.Location = new System.Drawing.Point(403, 431);
             this.p1OutTcpLabel.Name = "p1OutTcpLabel";
             this.p1OutTcpLabel.Size = new System.Drawing.Size(41, 13);
             this.p1OutTcpLabel.TabIndex = 50;
@@ -464,7 +477,7 @@ namespace PSIP_Udvardi_csh
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(347, 376);
+            this.label34.Location = new System.Drawing.Point(345, 432);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(28, 13);
             this.label34.TabIndex = 49;
@@ -473,7 +486,7 @@ namespace PSIP_Udvardi_csh
             // p1OutIcmpLabel
             // 
             this.p1OutIcmpLabel.AutoSize = true;
-            this.p1OutIcmpLabel.Location = new System.Drawing.Point(405, 352);
+            this.p1OutIcmpLabel.Location = new System.Drawing.Point(405, 380);
             this.p1OutIcmpLabel.Name = "p1OutIcmpLabel";
             this.p1OutIcmpLabel.Size = new System.Drawing.Size(41, 13);
             this.p1OutIcmpLabel.TabIndex = 48;
@@ -482,7 +495,7 @@ namespace PSIP_Udvardi_csh
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(342, 352);
+            this.label36.Location = new System.Drawing.Point(342, 380);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(33, 13);
             this.label36.TabIndex = 47;
@@ -491,7 +504,7 @@ namespace PSIP_Udvardi_csh
             // p1OutArpLabel
             // 
             this.p1OutArpLabel.AutoSize = true;
-            this.p1OutArpLabel.Location = new System.Drawing.Point(405, 302);
+            this.p1OutArpLabel.Location = new System.Drawing.Point(405, 330);
             this.p1OutArpLabel.Name = "p1OutArpLabel";
             this.p1OutArpLabel.Size = new System.Drawing.Size(41, 13);
             this.p1OutArpLabel.TabIndex = 46;
@@ -500,7 +513,7 @@ namespace PSIP_Udvardi_csh
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(346, 302);
+            this.label38.Location = new System.Drawing.Point(346, 330);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(29, 13);
             this.label38.TabIndex = 45;
@@ -509,7 +522,7 @@ namespace PSIP_Udvardi_csh
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(346, 326);
+            this.label39.Location = new System.Drawing.Point(346, 354);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(29, 13);
             this.label39.TabIndex = 44;
@@ -518,7 +531,7 @@ namespace PSIP_Udvardi_csh
             // p1OutIpLabel
             // 
             this.p1OutIpLabel.AutoSize = true;
-            this.p1OutIpLabel.Location = new System.Drawing.Point(405, 326);
+            this.p1OutIpLabel.Location = new System.Drawing.Point(405, 354);
             this.p1OutIpLabel.Name = "p1OutIpLabel";
             this.p1OutIpLabel.Size = new System.Drawing.Size(41, 13);
             this.p1OutIpLabel.TabIndex = 43;
@@ -527,7 +540,7 @@ namespace PSIP_Udvardi_csh
             // p1OutEthLabel
             // 
             this.p1OutEthLabel.AutoSize = true;
-            this.p1OutEthLabel.Location = new System.Drawing.Point(405, 279);
+            this.p1OutEthLabel.Location = new System.Drawing.Point(405, 307);
             this.p1OutEthLabel.Name = "p1OutEthLabel";
             this.p1OutEthLabel.Size = new System.Drawing.Size(41, 13);
             this.p1OutEthLabel.TabIndex = 42;
@@ -536,7 +549,7 @@ namespace PSIP_Udvardi_csh
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(352, 279);
+            this.label42.Location = new System.Drawing.Point(352, 307);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(23, 13);
             this.label42.TabIndex = 41;
@@ -545,7 +558,7 @@ namespace PSIP_Udvardi_csh
             // p2InHttpLabel
             // 
             this.p2InHttpLabel.AutoSize = true;
-            this.p2InHttpLabel.Location = new System.Drawing.Point(668, 403);
+            this.p2InHttpLabel.Location = new System.Drawing.Point(666, 458);
             this.p2InHttpLabel.Name = "p2InHttpLabel";
             this.p2InHttpLabel.Size = new System.Drawing.Size(35, 13);
             this.p2InHttpLabel.TabIndex = 64;
@@ -554,7 +567,7 @@ namespace PSIP_Udvardi_csh
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(595, 404);
+            this.label7.Location = new System.Drawing.Point(593, 459);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(36, 13);
             this.label7.TabIndex = 63;
@@ -563,7 +576,7 @@ namespace PSIP_Udvardi_csh
             // p2InTcpLabel
             // 
             this.p2InTcpLabel.AutoSize = true;
-            this.p2InTcpLabel.Location = new System.Drawing.Point(667, 377);
+            this.p2InTcpLabel.Location = new System.Drawing.Point(665, 432);
             this.p2InTcpLabel.Name = "p2InTcpLabel";
             this.p2InTcpLabel.Size = new System.Drawing.Size(41, 13);
             this.p2InTcpLabel.TabIndex = 62;
@@ -572,7 +585,7 @@ namespace PSIP_Udvardi_csh
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(603, 377);
+            this.label44.Location = new System.Drawing.Point(601, 432);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(28, 13);
             this.label44.TabIndex = 61;
@@ -581,7 +594,7 @@ namespace PSIP_Udvardi_csh
             // p2InIcmpLabel
             // 
             this.p2InIcmpLabel.AutoSize = true;
-            this.p2InIcmpLabel.Location = new System.Drawing.Point(668, 354);
+            this.p2InIcmpLabel.Location = new System.Drawing.Point(668, 382);
             this.p2InIcmpLabel.Name = "p2InIcmpLabel";
             this.p2InIcmpLabel.Size = new System.Drawing.Size(41, 13);
             this.p2InIcmpLabel.TabIndex = 60;
@@ -590,7 +603,7 @@ namespace PSIP_Udvardi_csh
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(598, 353);
+            this.label46.Location = new System.Drawing.Point(598, 381);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(33, 13);
             this.label46.TabIndex = 59;
@@ -599,7 +612,7 @@ namespace PSIP_Udvardi_csh
             // p2InArpLabel
             // 
             this.p2InArpLabel.AutoSize = true;
-            this.p2InArpLabel.Location = new System.Drawing.Point(667, 303);
+            this.p2InArpLabel.Location = new System.Drawing.Point(667, 331);
             this.p2InArpLabel.Name = "p2InArpLabel";
             this.p2InArpLabel.Size = new System.Drawing.Size(41, 13);
             this.p2InArpLabel.TabIndex = 58;
@@ -608,7 +621,7 @@ namespace PSIP_Udvardi_csh
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(602, 303);
+            this.label48.Location = new System.Drawing.Point(602, 331);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(29, 13);
             this.label48.TabIndex = 57;
@@ -617,7 +630,7 @@ namespace PSIP_Udvardi_csh
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(602, 327);
+            this.label49.Location = new System.Drawing.Point(602, 355);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(29, 13);
             this.label49.TabIndex = 56;
@@ -626,7 +639,7 @@ namespace PSIP_Udvardi_csh
             // p2InIpLabel
             // 
             this.p2InIpLabel.AutoSize = true;
-            this.p2InIpLabel.Location = new System.Drawing.Point(668, 327);
+            this.p2InIpLabel.Location = new System.Drawing.Point(668, 355);
             this.p2InIpLabel.Name = "p2InIpLabel";
             this.p2InIpLabel.Size = new System.Drawing.Size(41, 13);
             this.p2InIpLabel.TabIndex = 55;
@@ -635,7 +648,7 @@ namespace PSIP_Udvardi_csh
             // p2InEthLabel
             // 
             this.p2InEthLabel.AutoSize = true;
-            this.p2InEthLabel.Location = new System.Drawing.Point(667, 280);
+            this.p2InEthLabel.Location = new System.Drawing.Point(667, 308);
             this.p2InEthLabel.Name = "p2InEthLabel";
             this.p2InEthLabel.Size = new System.Drawing.Size(41, 13);
             this.p2InEthLabel.TabIndex = 54;
@@ -644,7 +657,7 @@ namespace PSIP_Udvardi_csh
             // label52
             // 
             this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(608, 280);
+            this.label52.Location = new System.Drawing.Point(608, 308);
             this.label52.Name = "label52";
             this.label52.Size = new System.Drawing.Size(23, 13);
             this.label52.TabIndex = 53;
@@ -688,11 +701,146 @@ namespace PSIP_Udvardi_csh
             this.entriesLbl.TabIndex = 68;
             this.entriesLbl.Text = "label8";
             // 
+            // timeoutValue
+            // 
+            this.timeoutValue.Location = new System.Drawing.Point(234, 303);
+            this.timeoutValue.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.timeoutValue.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.timeoutValue.Name = "timeoutValue";
+            this.timeoutValue.Size = new System.Drawing.Size(58, 20);
+            this.timeoutValue.TabIndex = 69;
+            this.timeoutValue.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.timeoutValue.KeyUp += new System.Windows.Forms.KeyEventHandler(this.timeoutValue_KeyUp);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(234, 378);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 41);
+            this.button1.TabIndex = 70;
+            this.button1.Text = "Clear CAM table";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(291, 306);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(12, 13);
+            this.label8.TabIndex = 71;
+            this.label8.Text = "s";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(234, 287);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(48, 13);
+            this.label9.TabIndex = 72;
+            this.label9.Text = "Timeout:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(345, 406);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(30, 13);
+            this.label13.TabIndex = 74;
+            this.label13.Text = "UDP";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(600, 406);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(30, 13);
+            this.label15.TabIndex = 75;
+            this.label15.Text = "UDP";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(599, 202);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(30, 13);
+            this.label17.TabIndex = 76;
+            this.label17.Text = "UDP";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(342, 202);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(30, 13);
+            this.label19.TabIndex = 77;
+            this.label19.Text = "UDP";
+            // 
+            // p1OutUdpLabel
+            // 
+            this.p1OutUdpLabel.AutoSize = true;
+            this.p1OutUdpLabel.Location = new System.Drawing.Point(404, 406);
+            this.p1OutUdpLabel.Name = "p1OutUdpLabel";
+            this.p1OutUdpLabel.Size = new System.Drawing.Size(41, 13);
+            this.p1OutUdpLabel.TabIndex = 78;
+            this.p1OutUdpLabel.Text = "label10";
+            // 
+            // p2InUdpLabel
+            // 
+            this.p2InUdpLabel.AutoSize = true;
+            this.p2InUdpLabel.Location = new System.Drawing.Point(666, 406);
+            this.p2InUdpLabel.Name = "p2InUdpLabel";
+            this.p2InUdpLabel.Size = new System.Drawing.Size(41, 13);
+            this.p2InUdpLabel.TabIndex = 79;
+            this.p2InUdpLabel.Text = "label20";
+            // 
+            // p1InUdpLabel
+            // 
+            this.p1InUdpLabel.AutoSize = true;
+            this.p1InUdpLabel.Location = new System.Drawing.Point(408, 202);
+            this.p1InUdpLabel.Name = "p1InUdpLabel";
+            this.p1InUdpLabel.Size = new System.Drawing.Size(41, 13);
+            this.p1InUdpLabel.TabIndex = 80;
+            this.p1InUdpLabel.Text = "label10";
+            // 
+            // p2OutUdpLabel
+            // 
+            this.p2OutUdpLabel.AutoSize = true;
+            this.p2OutUdpLabel.Location = new System.Drawing.Point(672, 202);
+            this.p2OutUdpLabel.Name = "p2OutUdpLabel";
+            this.p2OutUdpLabel.Size = new System.Drawing.Size(41, 13);
+            this.p2OutUdpLabel.TabIndex = 81;
+            this.p2OutUdpLabel.Text = "label10";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(747, 450);
+            this.ClientSize = new System.Drawing.Size(747, 494);
+            this.Controls.Add(this.p2OutUdpLabel);
+            this.Controls.Add(this.p1InUdpLabel);
+            this.Controls.Add(this.p2InUdpLabel);
+            this.Controls.Add(this.p1OutUdpLabel);
+            this.Controls.Add(this.label19);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.timeoutValue);
             this.Controls.Add(this.entriesLbl);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.LoopbackLbl2);
@@ -761,6 +909,7 @@ namespace PSIP_Udvardi_csh
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load_1);
+            ((System.ComponentModel.ISupportInitialize)(this.timeoutValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -833,6 +982,18 @@ namespace PSIP_Udvardi_csh
         private System.Windows.Forms.ListBox CamTableBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label entriesLbl;
+        private System.Windows.Forms.NumericUpDown timeoutValue;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label p1OutUdpLabel;
+        private System.Windows.Forms.Label p2InUdpLabel;
+        private System.Windows.Forms.Label p1InUdpLabel;
+        private System.Windows.Forms.Label p2OutUdpLabel;
     }
 }
 

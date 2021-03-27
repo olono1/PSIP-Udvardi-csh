@@ -50,6 +50,7 @@ namespace PSIP_Udvardi_csh
         public void Form1_Load_1(object sender, EventArgs e)
         {
             camTableClass = new CamTable();
+            timeoutValue.Value = camTableClass.TimeoutExpire;
 
 
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
@@ -111,15 +112,24 @@ namespace PSIP_Udvardi_csh
             }
             
             port1_in++;
+
+
             packetHandlig newPacket = new packetHandlig(packet, 1);
 
             newPacket = camTableClass.processPacket(newPacket);
 
-            
+            if(newPacket.EgressPort == newPacket.IngressPort)
+            {
+                Console.WriteLine("*Not sending Packet to port " + newPacket.EgressPort + "Destination address is" + newPacket.MacAddrDestination + "Source Address is: " + newPacket.MacAddrSource);
+            }
+            else
+            {
+                Thread trdLoop1_snd = new Thread(() => send_packet_lpbck1(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+                trdLoop1_snd.Start();
+            }
 
 
-            Thread trdLoop1_snd = new Thread(() => send_packet_lpbck1(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-            trdLoop1_snd.Start();
+
             Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" + packet.Length);
             
         }
@@ -163,9 +173,22 @@ namespace PSIP_Udvardi_csh
             }
             
             port2_in++;
-           
-            Thread trdLoop2_snd = new Thread(() => send_packet_lpbck2(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
-            trdLoop2_snd.Start();
+
+            packetHandlig newPacketP2 = new packetHandlig(packet, 2);
+
+            newPacketP2 = camTableClass.processPacket(newPacketP2);
+            
+
+            if(newPacketP2.EgressPort == newPacketP2.IngressPort)
+            {
+                Console.WriteLine("*Not sending Packet to port " + newPacketP2.EgressPort + "Destination address is" + newPacketP2.MacAddrDestination + "Source Address is: " + newPacketP2.MacAddrSource);
+            }
+            else
+            {
+                Thread trdLoop2_snd = new Thread(() => send_packet_lpbck2(packet)); //equal> new Thread(delegate() { this.ThreadTask(loopback1); });
+                trdLoop2_snd.Start();
+            }
+
             Console.WriteLine(packet.Timestamp.ToString("yyyy-MM-dd hh:mm:ss.fff") + " length:" + packet.Length);
         }
 
@@ -212,6 +235,10 @@ namespace PSIP_Udvardi_csh
                         {
                             packetStats["http"] = 1;
                         }
+                    }
+                    else if(packet.Ethernet.IpV4.Protocol == PcapDotNet.Packets.IpV4.IpV4Protocol.Udp)
+                    {
+                        packetStats["udp"] = 1;
                     }
 
                 }else if (packet.Ethernet.EtherType == EthernetType.Arp)
@@ -334,40 +361,43 @@ namespace PSIP_Udvardi_csh
                 this.p1InArpLabel.Invoke(new MethodInvoker(delegate { this.p1InArpLabel.Text = port1_in_stat["arp"].ToString(); }));
                 this.p1InIpLabel.Invoke(new MethodInvoker(delegate { this.p1InIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
                 this.p1InIcmpLabel.Invoke(new MethodInvoker(delegate { this.p1InIcmpLabel.Text = port1_in_stat["icmp"].ToString(); }));
+                this.p1InUdpLabel.Invoke(new MethodInvoker(delegate { this.p1InUdpLabel.Text = port1_in_stat["udp"].ToString(); }));
                 this.p1InTcpLabel.Invoke(new MethodInvoker(delegate { this.p1InTcpLabel.Text = port1_in_stat["tcp"].ToString(); }));
                 this.p1InHttpLabel.Invoke(new MethodInvoker(delegate { this.p1InHttpLabel.Text = port1_in_stat["http"].ToString(); }));
 
 
 
                 
-                this.p1OutEthLabel.Invoke(new MethodInvoker(delegate { this.p1OutEthLabel.Text = port1_in_stat["eth"].ToString(); }));
-                this.p1OutArpLabel.Invoke(new MethodInvoker(delegate { this.p1OutArpLabel.Text = port1_in_stat["arp"].ToString(); }));
-                this.p1OutIpLabel.Invoke(new MethodInvoker(delegate { this.p1OutIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
-                this.p1OutIcmpLabel.Invoke(new MethodInvoker(delegate { this.p1OutIcmpLabel.Text = port1_in_stat["icmp"].ToString(); }));
-                this.p1OutTcpLabel.Invoke(new MethodInvoker(delegate { this.p1OutTcpLabel.Text = port1_in_stat["tcp"].ToString(); }));
-                this.p1OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p1OutHttpLabel.Text = port1_in_stat["http"].ToString(); }));
+                this.p1OutEthLabel.Invoke(new MethodInvoker(delegate { this.p1OutEthLabel.Text = port1_out_stat["eth"].ToString(); }));
+                this.p1OutArpLabel.Invoke(new MethodInvoker(delegate { this.p1OutArpLabel.Text = port1_out_stat["arp"].ToString(); }));
+                this.p1OutIpLabel.Invoke(new MethodInvoker(delegate { this.p1OutIpLabel.Text = port1_out_stat["ipv4"].ToString(); }));
+                this.p1OutIcmpLabel.Invoke(new MethodInvoker(delegate { this.p1OutIcmpLabel.Text = port1_out_stat["icmp"].ToString(); }));
+                this.p1OutUdpLabel.Invoke(new MethodInvoker(delegate { this.p1OutUdpLabel.Text = port1_out_stat["udp"].ToString(); }));
+                this.p1OutTcpLabel.Invoke(new MethodInvoker(delegate { this.p1OutTcpLabel.Text = port1_out_stat["tcp"].ToString(); }));
+                this.p1OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p1OutHttpLabel.Text = port1_out_stat["http"].ToString(); }));
 
 
                
-                this.p2InEthLabel.Invoke(new MethodInvoker(delegate { this.p2InEthLabel.Text = port1_in_stat["eth"].ToString(); }));
-                this.p2InArpLabel.Invoke(new MethodInvoker(delegate { this.p2InArpLabel.Text = port1_in_stat["arp"].ToString(); }));
-                this.p2InIpLabel.Invoke(new MethodInvoker(delegate { this.p2InIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
-                this.p2InIcmpLabel.Invoke(new MethodInvoker(delegate { this.p2InIcmpLabel.Text = port1_in_stat["icmp"].ToString(); }));
-                this.p2InTcpLabel.Invoke(new MethodInvoker(delegate { this.p2InTcpLabel.Text = port1_in_stat["tcp"].ToString(); }));
-                this.p2InHttpLabel.Invoke(new MethodInvoker(delegate { this.p2InHttpLabel.Text = port1_in_stat["http"].ToString(); }));
+                this.p2InEthLabel.Invoke(new MethodInvoker(delegate { this.p2InEthLabel.Text = port2_in_stat["eth"].ToString(); }));
+                this.p2InArpLabel.Invoke(new MethodInvoker(delegate { this.p2InArpLabel.Text = port2_in_stat["arp"].ToString(); }));
+                this.p2InIpLabel.Invoke(new MethodInvoker(delegate { this.p2InIpLabel.Text = port2_in_stat["ipv4"].ToString(); }));
+                this.p2InIcmpLabel.Invoke(new MethodInvoker(delegate { this.p2InIcmpLabel.Text = port2_in_stat["icmp"].ToString(); }));
+                this.p2InUdpLabel.Invoke(new MethodInvoker(delegate { this.p2InUdpLabel.Text = port2_in_stat["udp"].ToString(); }));
+                this.p2InTcpLabel.Invoke(new MethodInvoker(delegate { this.p2InTcpLabel.Text = port2_in_stat["tcp"].ToString(); }));
+                this.p2InHttpLabel.Invoke(new MethodInvoker(delegate { this.p2InHttpLabel.Text = port2_in_stat["http"].ToString(); }));
 
 
          
 
-                this.p2OutEthLabel.Invoke(new MethodInvoker(delegate { this.p2OutEthLabel.Text = port1_in_stat["eth"].ToString(); }));
-                this.p2OutArpLabel.Invoke(new MethodInvoker(delegate { this.p2OutArpLabel.Text = port1_in_stat["arp"].ToString(); }));
-                this.p2OutIpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIpLabel.Text = port1_in_stat["ipv4"].ToString(); }));
-                this.p2OutIcmpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIcmpLabel.Text = port1_in_stat["icmp"].ToString(); }));
-                this.p2OutTcpLabel.Invoke(new MethodInvoker(delegate { this.p2OutTcpLabel.Text = port1_in_stat["tcp"].ToString(); }));
-                this.p2OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p2OutHttpLabel.Text = port1_in_stat["http"].ToString(); }));
+                this.p2OutEthLabel.Invoke(new MethodInvoker(delegate { this.p2OutEthLabel.Text = port2_out_stat["eth"].ToString(); }));
+                this.p2OutArpLabel.Invoke(new MethodInvoker(delegate { this.p2OutArpLabel.Text = port2_out_stat["arp"].ToString(); }));
+                this.p2OutIpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIpLabel.Text = port2_out_stat["ipv4"].ToString(); }));
+                this.p2OutIcmpLabel.Invoke(new MethodInvoker(delegate { this.p2OutIcmpLabel.Text = port2_out_stat["icmp"].ToString(); }));
+                this.p2OutUdpLabel.Invoke(new MethodInvoker(delegate { this.p2OutUdpLabel.Text = port2_out_stat["udp"].ToString(); }));
+                this.p2OutTcpLabel.Invoke(new MethodInvoker(delegate { this.p2OutTcpLabel.Text = port2_out_stat["tcp"].ToString(); }));
+                this.p2OutHttpLabel.Invoke(new MethodInvoker(delegate { this.p2OutHttpLabel.Text = port2_out_stat["http"].ToString(); }));
 
                 updateCamTableUI();
-
 
                 Thread.Sleep((int)TimeSpan.FromSeconds(1).TotalMilliseconds);
             }
@@ -391,7 +421,7 @@ namespace PSIP_Udvardi_csh
         public void resetStatistics()
         {
 
-            //resetCounters();
+            resetCounters();
             port1_in = 0;
             port1_out = 0;
             port2_in = 0;
@@ -436,24 +466,31 @@ namespace PSIP_Udvardi_csh
             port1_in_stat.TryAdd("ipv4", 0);
             port1_in_stat.TryAdd("icmp", 0);
             port1_in_stat.TryAdd("tcp", 0);
+            port1_in_stat.TryAdd("udp", 0);
             port1_in_stat.TryAdd("http", 0);
             port1_in_stat.TryAdd("arp", 0);
+
             port1_out_stat.TryAdd("eth", 0);
             port1_out_stat.TryAdd("ipv4", 0);
             port1_out_stat.TryAdd("icmp", 0);
             port1_out_stat.TryAdd("tcp", 0);
+            port1_out_stat.TryAdd("udp", 0);
             port1_out_stat.TryAdd("http", 0);
             port1_out_stat.TryAdd("arp", 0);
+
             port2_in_stat.TryAdd("eth", 0);
             port2_in_stat.TryAdd("ipv4", 0);
             port2_in_stat.TryAdd("icmp", 0);
             port2_in_stat.TryAdd("tcp", 0);
+            port2_in_stat.TryAdd("udp", 0);
             port2_in_stat.TryAdd("http", 0);
             port2_in_stat.TryAdd("arp", 0);
+
             port2_out_stat.TryAdd("eth", 0);
             port2_out_stat.TryAdd("ipv4", 0);
             port2_out_stat.TryAdd("icmp", 0);
             port2_out_stat.TryAdd("tcp", 0);
+            port2_out_stat.TryAdd("udp", 0);
             port2_out_stat.TryAdd("http", 0);
             port2_out_stat.TryAdd("arp", 0);
         }
@@ -461,6 +498,16 @@ namespace PSIP_Udvardi_csh
         private void label11_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void timeoutValue_KeyUp(object sender, KeyEventArgs e)
+        {
+            camTableClass.changeExpireTimeout(Convert.ToInt32(timeoutValue.Value));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            camTableClass.clearTable();
         }
     }
 
