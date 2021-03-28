@@ -58,7 +58,7 @@ namespace PSIP_Udvardi_csh
                 entryTimeout.Enabled = true;
                 timeoutValueSeconds = timeSeconds;
             }
-            catch (System.ObjectDisposedException)
+            catch (System.ObjectDisposedException) //If object is disposed during new initialization. Try again.
             {
                 entryTimeout = new Timer();
                 entryTimeout.Interval = TimeSpan.FromSeconds(timeSeconds).TotalMilliseconds;
@@ -72,6 +72,7 @@ namespace PSIP_Udvardi_csh
             
         }
 
+
         public double getTimeRemaining()
         {
             TimeSpan timerRunningFor = DateTime.Now - timerStart;
@@ -81,7 +82,7 @@ namespace PSIP_Udvardi_csh
         }
 
 
-
+        //Entry removes itself from table, when its timer elapses.
         private void removeMe(object sender, EventArgs e)
         {
             if(CamTable.CamTableDict.TryRemove(macAddress, out camEntry deletedEntry))
@@ -106,6 +107,7 @@ namespace PSIP_Udvardi_csh
 
         }
 
+        //For displaying entries in CAM table.
         public override string ToString()
         {
             return macAddress + " Port:" + port + " Timeout: " + Math.Floor(getTimeRemaining()) + "s";

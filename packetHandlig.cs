@@ -25,6 +25,7 @@ namespace PSIP_Udvardi_csh
             
         }
 
+        //Extracts SRC MAC and DST MAC from packet.
         private void savePacketInfo()
         {
             MacAddrSource = PacketToProcess.Ethernet.Source.ToString();

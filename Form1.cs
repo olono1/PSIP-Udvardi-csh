@@ -18,8 +18,7 @@ namespace PSIP_Udvardi_csh
 
     public partial class Form1 : Form
     {
-        //IDEA:: Create a class that will carry the statistics details accross the threads
-        //Make stats with a dictionary.IDictionary<string, int> dict = new Dictionary<string, int>();
+
 
         PacketDevice loopback1; //Global variables
         PacketDevice loopback2;
@@ -49,8 +48,9 @@ namespace PSIP_Udvardi_csh
 
         public void Form1_Load_1(object sender, EventArgs e)
         {
+            
             camTableClass = new CamTable();
-            timeoutValue.Value = camTableClass.TimeoutExpire;
+            timeoutValue.Value = camTableClass.TimeoutExpire; //Set current timeout in UI.
 
 
             IList<LivePacketDevice> allDevices = LivePacketDevice.AllLocalMachine;
@@ -62,13 +62,13 @@ namespace PSIP_Udvardi_csh
             lpbckcomm2 = loopback2.Open(65536, PacketDeviceOpenAttributes.NoCaptureLocal | PacketDeviceOpenAttributes.Promiscuous, 1);
 
 
-
             this.LoopbackLbl.Text = loopback1.Description;
             this.LoopbackLbl2.Text = loopback2.Description;
 
             Console.WriteLine("Int1: " + loopback1.Description);
             Console.WriteLine("Int2: " + loopback2.Description);
 
+            //Inicialize Statistics dictionaries.
             port1_in_stat = new ConcurrentDictionary<string, int>();
             port1_out_stat = new ConcurrentDictionary<string, int>();
             port2_in_stat = new ConcurrentDictionary<string, int>();
@@ -83,6 +83,8 @@ namespace PSIP_Udvardi_csh
             Thread trdLoop1 = new Thread(() => start_sniffing_lpbck1());//equal> new Thread(delegate() { this.start_sniffing_lpbck1(); });
            
             Thread trdLoop2 = new Thread(() => start_sniffing_lpbck2());
+
+            //Start sniffing, sending and showing stats.
             statisticsThrd.Start();
             trdLoop1.Start();
             trdLoop2.Start();
@@ -104,26 +106,25 @@ namespace PSIP_Udvardi_csh
         }
         public void PacketHandler1(Packet packet)
         {
-            
+            //Update statistics dictionary.
             IDictionary<string, int> toSendPacketStats = analysePacket(packet);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
                 if (protocol.Value == 1) { port1_in_stat[protocol.Key]++; }
             }
             
-            
-
-
+            //Wrapp packet for processing.
             packetHandlig newPacket = new packetHandlig(packet, 1);
-
+            
             newPacket = camTableClass.processPacket(newPacket);
 
-
+            //Ignore PC4 traffic and statistics.
             if (!(camTableClass.isPc4Ping(newPacket)))
             {
                 port1_in++;
             }
 
+            //Do not send packets that should go out the same port they came in.
             if (newPacket.EgressPort == newPacket.IngressPort)
             {
                 Console.WriteLine("*Not sending Packet to port " + newPacket.EgressPort + "Destination address is" + newPacket.MacAddrDestination + "Source Address is: " + newPacket.MacAddrSource);
@@ -142,7 +143,7 @@ namespace PSIP_Udvardi_csh
 
         public void send_packet_lpbck1(Packet toSend)
         {
-            
+            //Update packet out statistics dictionary.
             IDictionary<string, int> toSendPacketStats = analysePacket(toSend);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
@@ -150,14 +151,14 @@ namespace PSIP_Udvardi_csh
             }
             
             
-
+            //Ignore PC4.
             if (!((toSend.Ethernet.Source.ToString() == CamTable.Pc4MacAddr1) || (toSend.Ethernet.Destination.ToString() == CamTable.Pc4MacAddr1)))
             {
                 port2_out++;
             }
 
 
-
+            //Send packet out.
             lpbckcomm2.SendPacket(toSend);
             Console.WriteLine("SEND L2 " + loopback2.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
 
@@ -175,8 +176,8 @@ namespace PSIP_Udvardi_csh
 
         public void PacketHandler2(Packet packet)
         {
-            //stats
             
+            //Stats.
             IDictionary<string, int> toSendPacketStats = analysePacket(packet);
             foreach (KeyValuePair<string, int> protocol in toSendPacketStats)
             {
@@ -184,11 +185,12 @@ namespace PSIP_Udvardi_csh
             }
 
 
-
+            //Wrapper for packet.
             packetHandlig newPacketP2 = new packetHandlig(packet, 2);
 
             newPacketP2 = camTableClass.processPacket(newPacketP2);
 
+            //Ignore PC4
             if ( ! (camTableClass.isPc4Ping(newPacketP2)) )
             {
                 port2_in++;
@@ -212,8 +214,7 @@ namespace PSIP_Udvardi_csh
 
         public void send_packet_lpbck2(Packet toSend)
         {
-            //stats
-            
+            //Stats.
             IDictionary<string, int> toSendPacketStats = analysePacket(toSend);
             foreach(KeyValuePair<string, int> protocol in toSendPacketStats)
             {
@@ -224,6 +225,7 @@ namespace PSIP_Udvardi_csh
             lpbckcomm1.SendPacket(toSend);
             Console.WriteLine("SEND L1 " + loopback1.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
 
+            //Ignore PC4.
             if ( ! ((toSend.Ethernet.Source.ToString() == CamTable.Pc4MacAddr1) || (toSend.Ethernet.Destination.ToString() == CamTable.Pc4MacAddr1)))
             {
                 port1_out++;
@@ -234,12 +236,12 @@ namespace PSIP_Udvardi_csh
             return;
         }
 
-
+        //Returns a dictionary of protocols with 1 if they are present and 0 if not.
         public IDictionary<string, int> analysePacket(Packet packet)
         {
             IDictionary<string, int> packetStats = new Dictionary<string, int>();
 
-
+            //Ignore PC4.
             if (packet.Ethernet.Source.ToString() == CamTable.Pc4MacAddr1)
             {
                 return packetStats;
@@ -282,6 +284,7 @@ namespace PSIP_Udvardi_csh
             return packetStats;
         }
 
+        //For testing. Not used.
         private static Packet BuildEthernetPacket(string message)
         {
             EthernetLayer ethernetLayer =
@@ -326,7 +329,7 @@ namespace PSIP_Udvardi_csh
        
 
 
-
+        //Write to console all interfaces on this PC.
         private void btnClickThis_Click(object sender, EventArgs e)
         {
             //lblHelloWorld.Text = "Hello C#";
@@ -375,6 +378,7 @@ namespace PSIP_Udvardi_csh
         }
 
 
+        //Updates statistics labels and ListBox(CAM table) in UI.
         public void update_statistics()
         {
             Console.WriteLine("Thread for update started");
@@ -435,6 +439,7 @@ namespace PSIP_Udvardi_csh
 
         }
 
+        //Updates CAM table UI.
         public void updateCamTableUI()
         {
             CamTableBox.Invoke(new MethodInvoker(delegate { this.CamTableBox.Items.Clear(); }));
@@ -449,6 +454,7 @@ namespace PSIP_Udvardi_csh
         }
 
 
+        //Resets all counters.
         public void resetStatistics()
         {
 
@@ -491,6 +497,7 @@ namespace PSIP_Udvardi_csh
         }
 
 
+        //Imports all protocols to dictionaries with count 0.
         private void initializeCounters()
         {
             port1_in_stat.TryAdd("eth", 0);

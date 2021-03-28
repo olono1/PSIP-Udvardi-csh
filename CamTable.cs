@@ -14,8 +14,6 @@ namespace PSIP_Udvardi_csh
         private int portsExpireTimeout;
         private static ConcurrentDictionary<string, camEntry> camTableDict;
         private ConcurrentDictionary<int, Timer> noTrafficDictionrary;
-        private Timer port1TimeOut;
-        private Timer port2TimeOut;
         private static string Pc4MacAddr = "C2:04:44:B8:00:00";
 
 
@@ -34,6 +32,7 @@ namespace PSIP_Udvardi_csh
             noTrafficDictionrary.TryAdd(1, new Timer());
             noTrafficDictionrary.TryAdd(2, new Timer());
 
+            //Initialize timers for port traffic. If cable is disconnected.
             noTrafficDictionrary[1].Interval= TimeSpan.FromSeconds(portsExpireTimeout).TotalMilliseconds;
             noTrafficDictionrary[1].Elapsed += (sender, eventArgs) => { removeEntriesByPort(1); };
             noTrafficDictionrary[1].Enabled = true;
@@ -73,11 +72,12 @@ namespace PSIP_Udvardi_csh
 
         public packetHandlig processPacket(packetHandlig packet)
         {
-            //camEntry newPacketProcessing = new camEntry(packet.MacAddrSource, packet.IngressPort, timeoutExpire);
+            
 
             //Update port NoTraffic timers
             resetTrafficTimer(packet.IngressPort);
 
+            //Ignore PC4
             if (isPc4Ping(packet))
             {
                 packet.EgressPort = -1;
@@ -128,6 +128,7 @@ namespace PSIP_Udvardi_csh
 
         }
 
+
         public bool isPc4Ping(packetHandlig packet)
         {
             if(packet.MacAddrSource == Pc4MacAddr)
@@ -176,6 +177,7 @@ namespace PSIP_Udvardi_csh
         }
 
 
+        //Disposes all timers and clears CAM table dictionary.
         public void clearTable()
         {
             foreach (KeyValuePair<string, camEntry> entry in camTableDict)
