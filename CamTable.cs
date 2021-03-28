@@ -16,12 +16,13 @@ namespace PSIP_Udvardi_csh
         private ConcurrentDictionary<int, Timer> noTrafficDictionrary;
         private Timer port1TimeOut;
         private Timer port2TimeOut;
-        private string Pc4MacAddr = "C2:04:44:B8:00:00";
+        private static string Pc4MacAddr = "C2:04:44:B8:00:00";
 
 
 
         internal static ConcurrentDictionary<string, camEntry> CamTableDict { get => camTableDict; set => camTableDict = value; }
         public int TimeoutExpire { get => timeoutExpire; set => timeoutExpire = value; }
+        public static string Pc4MacAddr1 { get => Pc4MacAddr; set => Pc4MacAddr = value; }
 
         public CamTable()
         {
@@ -127,7 +128,7 @@ namespace PSIP_Udvardi_csh
 
         }
 
-        private bool isPc4Ping(packetHandlig packet)
+        public bool isPc4Ping(packetHandlig packet)
         {
             if(packet.MacAddrSource == Pc4MacAddr)
             {

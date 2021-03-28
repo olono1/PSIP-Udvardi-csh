@@ -111,14 +111,20 @@ namespace PSIP_Udvardi_csh
                 if (protocol.Value == 1) { port1_in_stat[protocol.Key]++; }
             }
             
-            port1_in++;
+            
 
 
             packetHandlig newPacket = new packetHandlig(packet, 1);
 
             newPacket = camTableClass.processPacket(newPacket);
 
-            if(newPacket.EgressPort == newPacket.IngressPort)
+
+            if (!(camTableClass.isPc4Ping(newPacket)))
+            {
+                port1_in++;
+            }
+
+            if (newPacket.EgressPort == newPacket.IngressPort)
             {
                 Console.WriteLine("*Not sending Packet to port " + newPacket.EgressPort + "Destination address is" + newPacket.MacAddrDestination + "Source Address is: " + newPacket.MacAddrSource);
             }
@@ -143,7 +149,12 @@ namespace PSIP_Udvardi_csh
                 if (protocol.Value == 1) { port2_out_stat[protocol.Key]++; }
             }
             
-            port2_out++;
+            
+
+            if (!((toSend.Ethernet.Source.ToString() == CamTable.Pc4MacAddr1) || (toSend.Ethernet.Destination.ToString() == CamTable.Pc4MacAddr1)))
+            {
+                port2_out++;
+            }
 
 
 
@@ -171,15 +182,19 @@ namespace PSIP_Udvardi_csh
             {
                 if (protocol.Value == 1) { port2_in_stat[protocol.Key]++; }
             }
-            
-            port2_in++;
+
+
 
             packetHandlig newPacketP2 = new packetHandlig(packet, 2);
 
             newPacketP2 = camTableClass.processPacket(newPacketP2);
-            
 
-            if(newPacketP2.EgressPort == newPacketP2.IngressPort)
+            if ( ! (camTableClass.isPc4Ping(newPacketP2)) )
+            {
+                port2_in++;
+            }
+
+            if (newPacketP2.EgressPort == newPacketP2.IngressPort)
             {
                 Console.WriteLine("*Not sending Packet to port " + newPacketP2.EgressPort + "Destination address is" + newPacketP2.MacAddrDestination + "Source Address is: " + newPacketP2.MacAddrSource);
             }
@@ -208,7 +223,13 @@ namespace PSIP_Udvardi_csh
 
             lpbckcomm1.SendPacket(toSend);
             Console.WriteLine("SEND L1 " + loopback1.Name + " Packet with IP: " + toSend.Ethernet + "and Timestmp: " + toSend.Timestamp + " SENT!");
-            port1_out++;
+
+            if ( ! ((toSend.Ethernet.Source.ToString() == CamTable.Pc4MacAddr1) || (toSend.Ethernet.Destination.ToString() == CamTable.Pc4MacAddr1)))
+            {
+                port1_out++;
+            }
+
+            
 
             return;
         }
@@ -216,8 +237,18 @@ namespace PSIP_Udvardi_csh
 
         public IDictionary<string, int> analysePacket(Packet packet)
         {
-
             IDictionary<string, int> packetStats = new Dictionary<string, int>();
+
+
+            if (packet.Ethernet.Source.ToString() == CamTable.Pc4MacAddr1)
+            {
+                return packetStats;
+            }else if(packet.Ethernet.Destination.ToString() == CamTable.Pc4MacAddr1)
+            {
+                return packetStats;
+            }
+
+            
             if(packet.DataLink.Kind == DataLinkKind.Ethernet)
             {
                 packetStats["eth"] = 1;
