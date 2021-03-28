@@ -29,7 +29,7 @@ namespace PSIP_Udvardi_csh
             camTableDict = new ConcurrentDictionary<string, camEntry>();
             noTrafficDictionrary = new ConcurrentDictionary<int, Timer>();
             timeoutExpire = 30;
-            portsExpireTimeout = 10;
+            portsExpireTimeout = 3;
 
             noTrafficDictionrary.TryAdd(1, new Timer());
             noTrafficDictionrary.TryAdd(2, new Timer());
