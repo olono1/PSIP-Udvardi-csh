@@ -16,6 +16,7 @@ namespace PSIP_Udvardi_csh
         private ConcurrentDictionary<int, Timer> noTrafficDictionrary;
         private Timer port1TimeOut;
         private Timer port2TimeOut;
+        private string Pc4MacAddr = "C2:04:44:B8:00:00";
 
 
 
@@ -76,6 +77,12 @@ namespace PSIP_Udvardi_csh
             //Update port NoTraffic timers
             resetTrafficTimer(packet.IngressPort);
 
+            if (isPc4Ping(packet))
+            {
+                packet.EgressPort = -1;
+                return packet;
+            }
+
             //Update Cam Table
             if(camTableDict.TryGetValue(packet.MacAddrSource, out camEntry valueForAdd))
             {
@@ -118,6 +125,18 @@ namespace PSIP_Udvardi_csh
 
             return packet;
 
+        }
+
+        private bool isPc4Ping(packetHandlig packet)
+        {
+            if(packet.MacAddrSource == Pc4MacAddr)
+            {
+                return true;
+            }else if(packet.MacAddrDestination == Pc4MacAddr)
+            {
+                return true;
+            }
+            return false;
         }
 
         private void resetTrafficTimer(int port)

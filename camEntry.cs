@@ -49,12 +49,27 @@ namespace PSIP_Udvardi_csh
             entryTimeout.Stop();
             entryTimeout.Dispose();
 
-            entryTimeout = new Timer();
-            entryTimeout.Interval = TimeSpan.FromSeconds(timeSeconds).TotalMilliseconds;
-            entryTimeout.Elapsed += removeMe;
-            timerStart = DateTime.Now;
-            entryTimeout.Enabled = true;
-            timeoutValueSeconds = timeSeconds;
+            try
+            {
+                entryTimeout = new Timer();
+                entryTimeout.Interval = TimeSpan.FromSeconds(timeSeconds).TotalMilliseconds;
+                entryTimeout.Elapsed += removeMe;
+                timerStart = DateTime.Now;
+                entryTimeout.Enabled = true;
+                timeoutValueSeconds = timeSeconds;
+            }
+            catch (System.ObjectDisposedException)
+            {
+                entryTimeout = new Timer();
+                entryTimeout.Interval = TimeSpan.FromSeconds(timeSeconds).TotalMilliseconds;
+                entryTimeout.Elapsed += removeMe;
+                timerStart = DateTime.Now;
+                entryTimeout.Enabled = true;
+                timeoutValueSeconds = timeSeconds;
+            }
+
+
+            
         }
 
         public double getTimeRemaining()
