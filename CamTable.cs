@@ -54,6 +54,18 @@ namespace PSIP_Udvardi_csh
             this.timeoutExpire = timeoutValue;
         }
 
+        public void updateEntriesNewTimeout(int newTimeout)
+        {
+            foreach(KeyValuePair<string, camEntry> entry in camTableDict)
+            {
+               if( newTimeout < entry.Value.getTimeElapsed())
+                {
+                    entry.Value.stopAndDisposeTimer();
+                    camTableDict.TryRemove(entry.Key, out camEntry deletedEntry);
+                }
+            }
+        }
+
         public double getCurrentTime(string macAddr)
         {
             double time = 0;

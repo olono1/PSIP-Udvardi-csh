@@ -81,6 +81,14 @@ namespace PSIP_Udvardi_csh
 
         }
 
+        public double getTimeElapsed()
+        {
+            TimeSpan timerRunningFor = DateTime.Now - timerStart;
+
+            return timerRunningFor.TotalSeconds;
+
+        }
+
 
         //Entry removes itself from table, when its timer elapses.
         private void removeMe(object sender, EventArgs e)
